@@ -135,7 +135,8 @@ func extractInformation(res APIResponse, videos *[]Video) {
 		video.ThumbnailURL = item.Snippet.Thumbnails[keys[0]].URL
 		video.Title = item.Snippet.Title
 		video.PublishedAt = item.Snippet.PublishedAt
-		video.URL = item.ID.VideoID
+		video.URL = fmt.Sprintf("https://www.youtube.com/watch?v=%s", item.ID.VideoID)
+		video.ID = item.ID.VideoID
 		video.ChannelTitle = item.Snippet.ChannelTitle
 		video.Description = item.Snippet.Description
 

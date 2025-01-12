@@ -4,12 +4,14 @@ type Video struct {
 	Title        string `json:"title"`
 	Description  string `json:"description"`
 	URL          string `json:"url"`
+	ID           string `json:"id"`
 	ThumbnailURL string `json:"thumbnailUrl"`
 	PublishedAt  string `json:"publishedAt"`
 	ChannelTitle string `json:"channelTitle"`
 	Season       int    `json:"season"`
 	Episode      int    `json:"episode"`
 	Downloaded   bool   `json:"downloaded"`
+	Filename     string `json:"filename"`
 }
 
 type SearchResult struct {
