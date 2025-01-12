@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<episodedetails>
+    <title>{{title}}</title>
+    <originaltitle>{{original_title}}</originaltitle>
+    <showtitle>{{show_title}}</showtitle>
+    <season>{{season}}</season>
+    <episode>{{episode}}</episode>
+    <displayseason>{{display_season}}</displayseason>
+    <displayepisode>{{display_episode}}</displayepisode>
+    <id>{{id}}</id>
+    <ratings>{{ratings}}</ratings>
+    <userrating>{{user_rating}}</userrating>
+    <plot>{{plot}}</plot>
+    <runtime>{{runtime}}</runtime>
+    <mpaa>{{mpaa}}</mpaa>
+    <premiered>{{premiered}}</premiered>
+    <aired>{{aired}}</aired>
+    <watched>{{watched}}</watched>
+    <playcount>{{playcount}}</playcount>
+    <trailer>{{trailer}}</trailer>
+    <dateadded>{{date_added}}</dateadded>
+    <epbookmark>{{epbookmark}}</epbookmark>
+    <code>{{code}}</code>
+    <fileinfo>
+        <streamdetails>
+            <video>
+                <codec>{{video_codec}}</codec>
+                <aspect>{{video_aspect}}</aspect>
+                <width>{{video_width}}</width>
+                <height>{{video_height}}</height>
+                <durationinseconds>{{video_duration}}</durationinseconds>
+                <stereomode>{{stereo_mode}}</stereomode>
+            </video>
+        </streamdetails>
+    </fileinfo>
+    <source>{{source}}</source>
+    <original_filename>{{original_filename}}</original_filename>
+    <user_note>{{user_note}}</user_note>
+    <episode_groups>
+        <group episode="{{group_episode}}" id="{{group_id}}" name="{{group_name}}"
+            season="{{group_season}}" />
+    </episode_groups>
+</episodedetails>

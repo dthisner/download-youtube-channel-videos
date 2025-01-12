@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tvshow>
+  <title>{{title}}</title>
+  <originaltitle>{{original_title}}</originaltitle>
+  <showtitle>{{show_title}}</showtitle>
+  <sorttitle>{{sort_title}}</sorttitle>
+  <year>{{year}}</year>
+  <ratings>{{ratings}}</ratings>
+  <userrating>{{user_rating}}</userrating>
+  <outline>{{outline}}</outline>
+  <plot>{{plot}}</plot>
+  <tagline>{{tagline}}</tagline>
+  <premiered>{{premiere_date}}</premiered>
+  <status>{{status}}</status>
+  <watched>{{watched}}</watched>
+  <playcount>{{play_count}}</playcount>
+  <genre>{{genre}}</genre>
+  <studio>{{studio}}</studio>
+  <country>{{country}}</country>
+  <actor>
+    <name>{{actor_name}}</name>
+    <role>{{actor_role}}</role>
+    <thumb>{{actor_thumbnail}}</thumb>
+  </actor>
+  <trailer>{{trailer}}</trailer>
+  <dateadded>{{date_added}}</dateadded>
+  <season>{{season}}</season>
+  <user_note>{{user_note}}</user_note>
+</tvshow>
