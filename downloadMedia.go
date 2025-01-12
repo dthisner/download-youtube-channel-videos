@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 
@@ -53,6 +54,9 @@ func downloadVideo(v Video) error {
 		return err
 	}
 
+	_ = os.Remove(videoFileName)
+	_ = os.Remove(audioFileName)
+
 	return nil
 }
 
@@ -94,6 +98,31 @@ func downloadStream(client youtube.Client, video *youtube.Video, format *youtube
 	}
 
 	fmt.Printf("Stream downloaded successfully: %s\n", filename)
+
+	return nil
+}
+
+// downloadImage downloads an image from the given URL and saves it to the specified file
+func downloadImage(video Video) error {
+	log.Printf("Downloading Thumbnail to: %s", video.Title)
+
+	response, err := http.Get(video.ThumbnailURL)
+	if err != nil {
+		return fmt.Errorf("failed to fetch the image: %v", err)
+	}
+	defer response.Body.Close()
+
+	filePath := fmt.Sprintf("%s-thumb.jpg", video.Filepath)
+	file, err := os.Create(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to create file: %v", err)
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, response.Body)
+	if err != nil {
+		return fmt.Errorf("failed to save the image: %v", err)
+	}
 
 	return nil
 }

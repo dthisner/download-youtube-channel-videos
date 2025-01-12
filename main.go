@@ -18,53 +18,57 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	channelID := os.Getenv("YT_CHANNEL_ID")
-	getYouTubeChannelVideos(channelID)
+	// channelID := os.Getenv("YT_CHANNEL_ID")
+	// getYouTubeChannelVideos(channelID)
 
-	// jsonFile, err := os.Open("channel_videos_seasons.json")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer jsonFile.Close()
+	downloadAndOrganizeVideos()
+}
 
-	// var videos []Video
+func downloadAndOrganizeVideos() {
+	jsonFile, err := os.Open("channel_videos_seasons.json")
+	if err != nil {
+		panic(err)
+	}
+	defer jsonFile.Close()
 
-	// jsonByte, _ := io.ReadAll(jsonFile)
-	// json.Unmarshal(jsonByte, &videos)
+	var videos []Video
 
-	// for i, video := range videos {
-	// 	log.Printf("Downloading Video %s", video.Title)
+	jsonByte, _ := io.ReadAll(jsonFile)
+	json.Unmarshal(jsonByte, &videos)
 
-	// 	checkSeasonFolderExist(video.Season)
-	// 	generateEpisodeNfo(video)
-	// 	err = downloadImage(video)
-	// 	if err != nil {
-	// 		log.Print(err)
-	// 	} else {
-	// 		log.Printf("Successfully downloaded image to: %s", video.Filepath)
-	// 		videos[i].ImageSaved = true
-	// 	}
+	for i, video := range videos {
+		log.Printf("Downloading Video %s", video.Title)
 
-	// 	if video.Downloaded {
-	// 		log.Printf("Video %s has already been downloaded", video.Title)
-	// 		continue
-	// 	}
+		checkSeasonFolderExist(video.Season)
+		generateEpisodeNfo(video)
+		err = downloadImage(video)
+		if err != nil {
+			log.Print(err)
+		} else {
+			log.Printf("Successfully downloaded image to: %s", video.Filepath)
+			videos[i].ImageSaved = true
+		}
 
-	// 	err = downloadVideo(video)
-	// 	if err != nil {
-	// 		log.Print(err)
-	// 	} else {
-	// 		videos[i].Downloaded = true
-	// 	}
+		if video.Downloaded {
+			log.Printf("Video %s has already been downloaded", video.Title)
+			continue
+		}
 
-	// 	break
-	// }
+		err = downloadVideo(video)
+		if err != nil {
+			log.Print(err)
+		} else {
+			videos[i].Downloaded = true
+		}
 
-	// videosJSON, _ := json.Marshal(videos)
-	// err = os.WriteFile("channel_videos_seasons_updated.json", videosJSON, 0644)
-	// if err != nil {
-	// 	log.Print("Problem with writting JSON", err)
-	// }
+		break
+	}
+
+	videosJSON, _ := json.Marshal(videos)
+	err = os.WriteFile("channel_videos_seasons_updated.json", videosJSON, 0644)
+	if err != nil {
+		log.Print("Problem with writting JSON", err)
+	}
 }
 
 // checkSeasonFolderExist creates the season folder if it's missing
