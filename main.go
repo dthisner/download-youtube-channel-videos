@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -18,43 +19,66 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	channelID := os.Getenv("YT_CHANNEL_ID")
-	getYouTubeChannelVideos(channelID)
+	// channelID := os.Getenv("YT_CHANNEL_ID")
+	// getYouTubeChannelVideos(channelID)
 
-	// jsonFile, err := os.Open("all_channel_videos.json")
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer jsonFile.Close()
+	jsonFile, err := os.Open("channel_videos_seasons.json")
+	if err != nil {
+		panic(err)
+	}
+	defer jsonFile.Close()
 
-	// var videos []Video
+	var videos []Video
 
-	// jsonByte, _ := io.ReadAll(jsonFile)
-	// json.Unmarshal(jsonByte, &videos)
+	jsonByte, _ := io.ReadAll(jsonFile)
+	json.Unmarshal(jsonByte, &videos)
 
-	// for i, video := range videos {
-	// 	log.Print("Video Title", video.Title)
+	for i, video := range videos {
+		log.Printf("Downloading Video %s", video.Title)
 
-	// 	if video.Downloaded {
-	// 		log.Printf("Video %s has already been downloaded", video.Title)
-	// 		continue
-	// 	}
+		checkSeasonFolderExist(video.Season)
+		generateEpisodeNfo(video)
 
-	// 	err = downloadVideo(video.URL)
-	// 	if err != nil {
-	// 		log.Print(err)
-	// 	} else {
-	// 		videos[i].Downloaded = true
-	// 	}
+		if video.Downloaded {
+			log.Printf("Video %s has already been downloaded", video.Title)
+			continue
+		}
 
-	// 	break
-	// }
+		err = downloadVideo(video)
+		if err != nil {
+			log.Print(err)
+		} else {
+			videos[i].Downloaded = true
+		}
 
-	// videosJSON, _ := json.Marshal(videos)
-	// err = os.WriteFile("channel_videos_seasons.json", videosJSON, 0644)
-	// if err != nil {
-	// 	log.Print("Problem with writting JSON", err)
-	// }
+		break
+	}
+
+	videosJSON, _ := json.Marshal(videos)
+	err = os.WriteFile("channel_videos_seasons2.json", videosJSON, 0644)
+	if err != nil {
+		log.Print("Problem with writting JSON", err)
+	}
+}
+
+func checkSeasonFolderExist(season string) error {
+	folderPath := fmt.Sprintf("After Skool/Season %s", season)
+
+	_, err := os.Stat(folderPath)
+
+	if os.IsNotExist(err) {
+		// Create the folder (and any necessary parent directories)
+		err := os.MkdirAll(folderPath, 0755) // 0755 is the permission mode
+		if err != nil {
+			return fmt.Errorf("error creating folder: %s", err)
+
+		}
+		log.Print("Folder created successfully: ", folderPath)
+	} else {
+		log.Print("Folder already exists:", folderPath)
+	}
+
+	return nil
 }
 
 func getYouTubeChannelVideos(channelID string) {
@@ -62,13 +86,13 @@ func getYouTubeChannelVideos(channelID string) {
 	baseURL := "https://www.googleapis.com/youtube/v3/search"
 
 	nextPageToken := ""
-	maxResults := 500 // Set your limit (max = 500)
+	maxResults := 20 // Set your limit (max = 500)
 	totalFetched := 0
 
 	var videos []Video
 
 	for {
-		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=20&pageToken=%s", baseURL, apiKey, channelID, nextPageToken)
+		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=5&pageToken=%s", baseURL, apiKey, channelID, nextPageToken)
 
 		resp, err := http.Get(url)
 		if err != nil {
@@ -90,7 +114,7 @@ func getYouTubeChannelVideos(channelID string) {
 			return
 		}
 
-		extractInformation(res, &videos)
+		extractInformation(res.Items, &videos)
 		totalFetched++
 
 		if res.NextPageToken == "" || totalFetched >= maxResults {
@@ -99,7 +123,7 @@ func getYouTubeChannelVideos(channelID string) {
 
 		nextPageToken = res.NextPageToken
 		// Optional delay to avoid hitting rate limits
-		time.Sleep(1 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 
 	fmt.Printf("Total videos fetched: %d\n", len(videos))
@@ -113,9 +137,9 @@ func getYouTubeChannelVideos(channelID string) {
 	log.Print("Successfully saved the JSON file")
 }
 
-func extractInformation(res APIResponse, videos *[]Video) {
+func extractInformation(res []SearchResult, videos *[]Video) {
 	var currentEpisode = 1
-	var currentSeason int
+	var currentSeason = 1
 
 	yearToSeason := map[string]int{
 		"2016": 1, "2017": 2, "2018": 3, "2019": 4,
@@ -123,7 +147,7 @@ func extractInformation(res APIResponse, videos *[]Video) {
 		"2024": 9, "2025": 10, "2026": 11,
 	}
 
-	for _, item := range res.Items {
+	for _, item := range res {
 		var video Video
 
 		if item.ID.VideoID == "" {
@@ -133,7 +157,7 @@ func extractInformation(res APIResponse, videos *[]Video) {
 
 		keys := maps.Keys(item.Snippet.Thumbnails)
 		video.ThumbnailURL = item.Snippet.Thumbnails[keys[0]].URL
-		video.Title = item.Snippet.Title
+		video.Title = strings.Replace(item.Snippet.Title, "\u0026#39;", "", -1)
 		video.PublishedAt = item.Snippet.PublishedAt
 		video.URL = fmt.Sprintf("https://www.youtube.com/watch?v=%s", item.ID.VideoID)
 		video.ID = item.ID.VideoID
@@ -142,20 +166,23 @@ func extractInformation(res APIResponse, videos *[]Video) {
 
 		year := video.PublishedAt[0:4]
 		if season, exists := yearToSeason[year]; exists {
-			video.Season = season
+			video.Season = fmt.Sprintf("%02d", season)
 
 			log.Printf("Season: %d CurrentSeasson: %d", season, currentSeason)
 			if season == currentSeason {
 				currentEpisode++
-				video.Episode = currentEpisode
+				video.Episode = fmt.Sprintf("%02d", currentEpisode)
 			} else {
 				currentEpisode = 1
-				video.Episode = currentEpisode
+				video.Episode = fmt.Sprintf("%02d", currentEpisode)
 				currentSeason = season
 			}
 
+			video.Filepath = fmt.Sprintf("After Skool/Season %s/S%sE%s - %s", video.Season, video.Season, video.Episode, video.Title)
+			video.Filename = fmt.Sprintf("S%sE%s - %s", video.Season, video.Episode, video.Title)
+
 		} else {
-			video.Season = 0 // Default season or you could skip it
+			video.Season = "00" // Default season or you could skip it
 		}
 
 		*videos = append(*videos, video)
@@ -164,10 +191,10 @@ func extractInformation(res APIResponse, videos *[]Video) {
 }
 
 func printData(video Video) {
-	log.Print("Title:", video.Title)
-	log.Print("URL:", video.URL)
-	log.Print("Published At:", video.PublishedAt)
-	log.Print("Channel Title:", video.ChannelTitle)
-	log.Print("Video Thumnail URL:", video.ThumbnailURL)
+	log.Print("Title ", video.Title)
+	log.Print("URL: ", video.URL)
+	log.Print("Published At: ", video.PublishedAt)
+	log.Print("Channel Title: ", video.ChannelTitle)
+	log.Print("Video Thumnail URL: ", video.ThumbnailURL)
 	log.Print()
 }

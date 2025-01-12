@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
-	"strconv"
 	"text/template"
 )
 
@@ -93,18 +93,14 @@ func generateEpisodeNfo(video Video) {
   </episode_groups>
 </episodedetails>`
 
-	video.Filename = fmt.Sprintf("After Skool/Season %d/S%dE%d - %s", video.Season, video.Season, video.Episode, video.Filename)
-
-	// Check if folder exist, otherwise create it
-
 	// Define the episode details
 	episode := EpisodeDetails{
 		CreationDate:     "2024-07-25 15:06:07",
 		Title:            video.Title,
 		OriginalTitle:    video.Title,
 		ShowTitle:        video.Title,
-		Season:           strconv.Itoa(video.Season),
-		Episode:          strconv.Itoa(video.Episode),
+		Season:           video.Season,
+		Episode:          video.Episode,
 		Plot:             video.Description,
 		Runtime:          "0",
 		MPAA:             "",
@@ -129,14 +125,14 @@ func generateEpisodeNfo(video Video) {
 	// Parse the template
 	tmpl, err := template.New("episodedetails").Parse(xmlTemplate)
 	if err != nil {
-		fmt.Println("Error parsing template:", err)
+		log.Print("Error parsing template:", err)
 		return
 	}
 
-	// Create the output file
-	file, err := os.Create(video.Filename)
+	filename := fmt.Sprintf("%s.nfo", video.Filepath)
+	file, err := os.Create(filename)
 	if err != nil {
-		fmt.Println("Error creating file:", err)
+		log.Print("Error creating file:", err)
 		return
 	}
 	defer file.Close()
@@ -144,9 +140,9 @@ func generateEpisodeNfo(video Video) {
 	// Execute the template and write to the file
 	err = tmpl.Execute(file, episode)
 	if err != nil {
-		fmt.Println("Error executing template:", err)
+		log.Print("Error executing template:", err)
 		return
 	}
 
-	fmt.Println(".nfo file created successfully!")
+	log.Printf(".nfi file created successfully: %s", filename)
 }

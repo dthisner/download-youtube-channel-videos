@@ -6,15 +6,14 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/kkdai/youtube/v2"
 )
 
-func downloadVideo(videoURL string) error {
+func downloadVideo(v Video) error {
 	client := youtube.Client{}
 
-	video, err := client.GetVideo(videoURL)
+	video, err := client.GetVideo(v.URL)
 	if err != nil {
 		return fmt.Errorf("error fetching video info: %v", err)
 	}
@@ -36,18 +35,18 @@ func downloadVideo(videoURL string) error {
 		log.Fatal("Suitable video or audio format not found")
 	}
 
-	videoFileName := strings.ReplaceAll(video.Title, " ", "_") + "_video.mp4"
+	videoFileName := v.Filepath + "_video.mp4"
 	err = downloadStream(client, video, videoFormat, videoFileName)
 	if err != nil {
 		return err
 	}
-	audioFileName := strings.ReplaceAll(video.Title, " ", "_") + "_audio.mp4"
+	audioFileName := v.Filepath + "_audio.mp4"
 	err = downloadStream(client, video, audioFormat, audioFileName)
 	if err != nil {
 		return err
 	}
 
-	err = mergeAudioVideo(video.Title, videoFileName, audioFileName)
+	err = mergeAudioVideo(v.Filepath, videoFileName, audioFileName)
 	if err != nil {
 		return err
 	}
@@ -55,8 +54,8 @@ func downloadVideo(videoURL string) error {
 	return nil
 }
 
-func mergeAudioVideo(title, videoFileName, audioFileName string) error {
-	mergedFileName := strings.ReplaceAll(title, " ", "_") + "_merged.mp4"
+func mergeAudioVideo(filePath, videoFileName, audioFileName string) error {
+	mergedFileName := filePath + ".mp4"
 	ffmpegCmd := exec.Command("ffmpeg", "-i", videoFileName, "-i", audioFileName, "-c:v", "copy", "-c:a", "aac", "-strict", "experimental", mergedFileName)
 
 	log.Print("Merging audio and video...")
@@ -67,7 +66,7 @@ func mergeAudioVideo(title, videoFileName, audioFileName string) error {
 		return fmt.Errorf("error merging audio and video: %s", err)
 	}
 
-	log.Print("Merging complete:", mergedFileName)
+	log.Print("Merging completed: ", mergedFileName)
 
 	return nil
 }

@@ -8,10 +8,11 @@ type Video struct {
 	ThumbnailURL string `json:"thumbnailUrl"`
 	PublishedAt  string `json:"publishedAt"`
 	ChannelTitle string `json:"channelTitle"`
-	Season       int    `json:"season"`
-	Episode      int    `json:"episode"`
+	Season       string `json:"season"`
+	Episode      string `json:"episode"`
 	Downloaded   bool   `json:"downloaded"`
 	Filename     string `json:"filename"`
+	Filepath     string `json:"filepath"`
 }
 
 type SearchResult struct {
