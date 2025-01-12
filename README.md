@@ -24,3 +24,9 @@ If you run with **go run main.go**, it will not recognize the other files and yo
 ## Requierments
 
 [YouTube API Key](https://developers.google.com/youtube/v3/getting-started)
+
+## To Do
+
+- [ ] Dynamically check if the season exist, if not, create folder for it
+- [ ] Create episode .nfo file
+- [ ] Download and save the thumbnail and save it as follow: S01E01 - 2022 Money Masterclass-thumb
