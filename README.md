@@ -27,6 +27,7 @@ If you run with **go run main.go**, it will not recognize the other files and yo
 
 ## To Do
 
-- [ ] Dynamically check if the season exist, if not, create folder for it
-- [ ] Create episode .nfo file
-- [ ] Download and save the thumbnail and save it as follow: S01E01 - 2022 Money Masterclass-thumb
+- [x] Dynamically check if the season exist, if not, create folder for it
+- [x] Create episode .nfo file
+- [x] Download and save the thumbnail and save it as follow: S01E01 - 2022 Money Masterclass-thumb
+- [ ] Re-Download all data from youtube to get the biggest thumbnail possible

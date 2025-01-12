@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"golang.org/x/exp/maps"
 )
 
 func main() {
@@ -19,46 +18,53 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	// channelID := os.Getenv("YT_CHANNEL_ID")
-	// getYouTubeChannelVideos(channelID)
+	channelID := os.Getenv("YT_CHANNEL_ID")
+	getYouTubeChannelVideos(channelID)
 
-	jsonFile, err := os.Open("channel_videos_seasons.json")
-	if err != nil {
-		panic(err)
-	}
-	defer jsonFile.Close()
+	// jsonFile, err := os.Open("channel_videos_seasons.json")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer jsonFile.Close()
 
-	var videos []Video
+	// var videos []Video
 
-	jsonByte, _ := io.ReadAll(jsonFile)
-	json.Unmarshal(jsonByte, &videos)
+	// jsonByte, _ := io.ReadAll(jsonFile)
+	// json.Unmarshal(jsonByte, &videos)
 
-	for i, video := range videos {
-		log.Printf("Downloading Video %s", video.Title)
+	// for i, video := range videos {
+	// 	log.Printf("Downloading Video %s", video.Title)
 
-		checkSeasonFolderExist(video.Season)
-		generateEpisodeNfo(video)
+	// 	checkSeasonFolderExist(video.Season)
+	// 	generateEpisodeNfo(video)
+	// 	err = downloadImage(video)
+	// 	if err != nil {
+	// 		log.Print(err)
+	// 	} else {
+	// 		log.Printf("Successfully downloaded image to: %s", video.Filepath)
+	// 		videos[i].ImageSaved = true
+	// 	}
 
-		if video.Downloaded {
-			log.Printf("Video %s has already been downloaded", video.Title)
-			continue
-		}
+	// 	if video.Downloaded {
+	// 		log.Printf("Video %s has already been downloaded", video.Title)
+	// 		continue
+	// 	}
 
-		err = downloadVideo(video)
-		if err != nil {
-			log.Print(err)
-		} else {
-			videos[i].Downloaded = true
-		}
+	// 	err = downloadVideo(video)
+	// 	if err != nil {
+	// 		log.Print(err)
+	// 	} else {
+	// 		videos[i].Downloaded = true
+	// 	}
 
-		break
-	}
+	// 	break
+	// }
 
-	videosJSON, _ := json.Marshal(videos)
-	err = os.WriteFile("channel_videos_seasons2.json", videosJSON, 0644)
-	if err != nil {
-		log.Print("Problem with writting JSON", err)
-	}
+	// videosJSON, _ := json.Marshal(videos)
+	// err = os.WriteFile("channel_videos_seasons_updated.json", videosJSON, 0644)
+	// if err != nil {
+	// 	log.Print("Problem with writting JSON", err)
+	// }
 }
 
 func checkSeasonFolderExist(season string) error {
@@ -155,8 +161,7 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 			continue
 		}
 
-		keys := maps.Keys(item.Snippet.Thumbnails)
-		video.ThumbnailURL = item.Snippet.Thumbnails[keys[0]].URL
+		video.ThumbnailURL = getThumbUrl(item.Snippet.Thumbnails)
 		video.Title = strings.Replace(item.Snippet.Title, "\u0026#39;", "", -1)
 		video.PublishedAt = item.Snippet.PublishedAt
 		video.URL = fmt.Sprintf("https://www.youtube.com/watch?v=%s", item.ID.VideoID)
@@ -188,6 +193,19 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 		*videos = append(*videos, video)
 		printData(video)
 	}
+}
+
+func getThumbUrl(thumbnails map[string]Thumbnail) string {
+	var biggestSize = 0
+	var thumbnailURL string
+	for _, thumb := range thumbnails {
+		log.Printf("thumb.height: %d biggestSize: %d", thumb.Height, biggestSize)
+		if thumb.Height > biggestSize {
+			biggestSize = thumb.Height
+			thumbnailURL = thumb.URL
+		}
+	}
+	return thumbnailURL
 }
 
 func printData(video Video) {

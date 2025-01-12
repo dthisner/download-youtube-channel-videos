@@ -11,6 +11,7 @@ type Video struct {
 	Season       string `json:"season"`
 	Episode      string `json:"episode"`
 	Downloaded   bool   `json:"downloaded"`
+	ImageSaved   bool   `json:"imageSaved"`
 	Filename     string `json:"filename"`
 	Filepath     string `json:"filepath"`
 }
