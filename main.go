@@ -18,9 +18,6 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	apiKey := os.Getenv("YT_API_KEY")
-	fmt.Println("apiKey", apiKey)
-
 	channelID := os.Getenv("YT_CHANNEL_ID")
 	getYouTubeChannelVideos(channelID)
 

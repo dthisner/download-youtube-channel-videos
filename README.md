@@ -10,6 +10,17 @@ It usses ffmpeg to combine the video and audio file, had issues finding a stream
 brew install ffmpeg
 ```
 
+Create a .env file with following values:
+
+```
+YT_API_KEY=value
+YT_CHANNEL_ID=value
+```
+
 Run it with **go run .**
 
 If you run with **go run main.go**, it will not recognize the other files and you get error as **undefined: Video**
+
+## Requierments
+
+[YouTube API Key](https://developers.google.com/youtube/v3/getting-started)
