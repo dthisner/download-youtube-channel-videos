@@ -10,6 +10,8 @@ import (
 	"github.com/kkdai/youtube/v2"
 )
 
+// downloadVideo gets the YouTube video, looking for 720p format.
+// Have to get both audio and video stream to then merge them into one file
 func downloadVideo(v Video) error {
 	client := youtube.Client{}
 
@@ -54,6 +56,7 @@ func downloadVideo(v Video) error {
 	return nil
 }
 
+// mergeAudioVideo takes the audio and video file and merges it into one file
 func mergeAudioVideo(filePath, videoFileName, audioFileName string) error {
 	mergedFileName := filePath + ".mp4"
 	ffmpegCmd := exec.Command("ffmpeg", "-i", videoFileName, "-i", audioFileName, "-c:v", "copy", "-c:a", "aac", "-strict", "experimental", mergedFileName)
@@ -71,6 +74,7 @@ func mergeAudioVideo(filePath, videoFileName, audioFileName string) error {
 	return nil
 }
 
+// downloadStream gets the YouTube audio or video stream and downloads it
 func downloadStream(client youtube.Client, video *youtube.Video, format *youtube.Format, filename string) error {
 	stream, _, err := client.GetStream(video, format)
 	if err != nil {

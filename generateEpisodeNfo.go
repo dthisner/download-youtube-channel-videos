@@ -46,6 +46,7 @@ type EpisodeDetails struct {
 	GroupSeason      string
 }
 
+// generateEpisodeNfo created an .nfo file with all data based on the extracted data from youtube
 func generateEpisodeNfo(video Video) {
 	// Template string
 	xmlTemplate := `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

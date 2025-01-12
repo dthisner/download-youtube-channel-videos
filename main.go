@@ -67,6 +67,7 @@ func main() {
 	// }
 }
 
+// checkSeasonFolderExist creates the season folder if it's missing
 func checkSeasonFolderExist(season string) error {
 	folderPath := fmt.Sprintf("After Skool/Season %s", season)
 
@@ -87,6 +88,7 @@ func checkSeasonFolderExist(season string) error {
 	return nil
 }
 
+// getYouTubeChannelVideos gets all youtube videos based on the channel ID. Will loop until it has recieved all of them or reached the maxResult
 func getYouTubeChannelVideos(channelID string) {
 	apiKey := os.Getenv("YT_API_KEY")
 	baseURL := "https://www.googleapis.com/youtube/v3/search"
@@ -143,6 +145,7 @@ func getYouTubeChannelVideos(channelID string) {
 	log.Print("Successfully saved the JSON file")
 }
 
+// extractInformation takes the response JSON and saves it to our Video Struct
 func extractInformation(res []SearchResult, videos *[]Video) {
 	var currentEpisode = 1
 	var currentSeason = 1
@@ -195,6 +198,7 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 	}
 }
 
+// getThumbUrl looks for the biggest thumbnail and saves that as the best option for Thumbnail URL
 func getThumbUrl(thumbnails map[string]Thumbnail) string {
 	var biggestSize = 0
 	var thumbnailURL string
@@ -208,6 +212,7 @@ func getThumbUrl(thumbnails map[string]Thumbnail) string {
 	return thumbnailURL
 }
 
+// printData Just prints some of the selected values
 func printData(video Video) {
 	log.Print("Title ", video.Title)
 	log.Print("URL: ", video.URL)
