@@ -13,6 +13,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+var JSON_FILE_NAME = "all_channel_videos.json"
+
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
@@ -25,7 +27,7 @@ func main() {
 }
 
 func downloadAndOrganizeVideos() {
-	jsonFile, err := os.Open("channel_videos_seasons.json")
+	jsonFile, err := os.Open(JSON_FILE_NAME)
 	if err != nil {
 		panic(err)
 	}
@@ -37,6 +39,11 @@ func downloadAndOrganizeVideos() {
 	json.Unmarshal(jsonByte, &videos)
 
 	for i, video := range videos {
+		if video.Downloaded {
+			log.Printf("Video %s has already been downloaded", video.Title)
+			continue
+		}
+
 		log.Printf("Downloading Video %s", video.Title)
 
 		checkSeasonFolderExist(video.Season)
@@ -49,11 +56,6 @@ func downloadAndOrganizeVideos() {
 			videos[i].ImageSaved = true
 		}
 
-		if video.Downloaded {
-			log.Printf("Video %s has already been downloaded", video.Title)
-			continue
-		}
-
 		err = downloadVideo(video)
 		if err != nil {
 			log.Print(err)
@@ -61,13 +63,12 @@ func downloadAndOrganizeVideos() {
 			videos[i].Downloaded = true
 		}
 
-		break
-	}
-
-	videosJSON, _ := json.Marshal(videos)
-	err = os.WriteFile("channel_videos_seasons_updated.json", videosJSON, 0644)
-	if err != nil {
-		log.Print("Problem with writting JSON", err)
+		videosJSON, _ := json.Marshal(videos)
+		err = os.WriteFile(JSON_FILE_NAME, videosJSON, 0644)
+		if err != nil {
+			log.Print("Problem with writting JSON", err)
+		}
+		log.Print("Successfully downloaded, merged the video and updated the JSON file")
 	}
 }
 
@@ -98,13 +99,13 @@ func getYouTubeChannelVideos(channelID string) {
 	baseURL := "https://www.googleapis.com/youtube/v3/search"
 
 	nextPageToken := ""
-	maxResults := 20 // Set your limit (max = 500)
+	maxResults := 500 // Set your limit (max = 500)
 	totalFetched := 0
 
 	var videos []Video
 
 	for {
-		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=5&pageToken=%s", baseURL, apiKey, channelID, nextPageToken)
+		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=20&pageToken=%s", baseURL, apiKey, channelID, nextPageToken)
 
 		resp, err := http.Get(url)
 		if err != nil {
@@ -141,7 +142,7 @@ func getYouTubeChannelVideos(channelID string) {
 	fmt.Printf("Total videos fetched: %d\n", len(videos))
 
 	videosJSON, _ := json.Marshal(videos)
-	err := os.WriteFile("all_channel_videos.json", videosJSON, 0644)
+	err := os.WriteFile(JSON_FILE_NAME, videosJSON, 0644)
 	if err != nil {
 		log.Print("Problem with writting JSON", err)
 	}
@@ -207,10 +208,10 @@ func getThumbUrl(thumbnails map[string]Thumbnail) string {
 	var biggestSize = 0
 	var thumbnailURL string
 	for _, thumb := range thumbnails {
-		log.Printf("thumb.height: %d biggestSize: %d", thumb.Height, biggestSize)
 		if thumb.Height > biggestSize {
 			biggestSize = thumb.Height
 			thumbnailURL = thumb.URL
+			log.Printf("biggestSize is now: %d with URL: %s", biggestSize, thumbnailURL)
 		}
 	}
 	return thumbnailURL
