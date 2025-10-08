@@ -21,6 +21,7 @@ func main() {
 	envVar := EnvVar{
 		ApiKey:          os.Getenv("YT_API_KEY"),
 		ChannelID:       os.Getenv("YT_CHANNEL_ID"),
+		PlaylistID:      os.Getenv("YT_PLAYLIST_ID"),
 		ChannelName:     os.Getenv("YT_CHANNEL_NAME"),
 		SeasonStartYear: os.Getenv("SEASON_START_YEAR"),
 	}

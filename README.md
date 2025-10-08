@@ -38,3 +38,4 @@ If you run with **go run main.go**, it will not recognize the other files and yo
 - [ ] Check to see what is the latest episode from that season to not overwrite
 - [x] Convert to using Structs to make it easier checking existing and fresh data to see what is the last episode when something gone wrong
 - [ ] Delete video and audio files upon issues downloading
+- [ ] Download videos in a playlist

@@ -26,6 +26,7 @@ func (YT YouTubeChannel) getData() {
 	jsonFile, err := os.Open(YT.jsonFilePath)
 	if err != nil {
 		log.Print("Did not find any data for: ", YT.jsonFilePath)
+		log.Print("Will generate new file with data")
 	} else {
 		log.Print("Reading Existing File")
 		jsonByte, _ := io.ReadAll(jsonFile)
@@ -33,8 +34,15 @@ func (YT YouTubeChannel) getData() {
 	}
 	defer jsonFile.Close()
 
-	newVideoData := YT.getVideos()
-	// newVideoData := YT.getVideosDEBUG()
+	newVideoData, err := YT.getVideos()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// newVideoData, err := YT.getVideosDEBUG()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	extractedInfo := YT.extractInformation(newVideoData)
 
@@ -53,7 +61,6 @@ func (YT YouTubeChannel) getVideosDEBUG() []SearchResult {
 	jsonFile, err := os.Open("TestData/YouTube-Data-Response.json")
 	if err != nil {
 		log.Print("Problem reading the debugFile", err)
-
 	}
 
 	var res APIResponse
@@ -62,12 +69,11 @@ func (YT YouTubeChannel) getVideosDEBUG() []SearchResult {
 		return res.Items
 	}
 
-	fmt.Printf("Total videos fetched: %d\n", len(res.Items))
 	return res.Items
 }
 
-func (YT YouTubeChannel) getVideos() []SearchResult {
-	baseURL := "https://www.googleapis.com/youtube/v3/search"
+func (YT YouTubeChannel) getVideos() ([]SearchResult, error) {
+	baseURL := "https://www.googleapis.com/youtube/v3"
 	nextPageToken := ""
 	maxResults := 50 // Set your limit (max = 50)
 	totalFetched := 0
@@ -75,12 +81,18 @@ func (YT YouTubeChannel) getVideos() []SearchResult {
 	var videoData []SearchResult
 
 	for {
-		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=%d&pageToken=%s", baseURL, YT.evnVar.ApiKey, YT.evnVar.ChannelID, maxResults, nextPageToken)
+		var url string
+
+		if YT.evnVar.ChannelID != "" {
+			url = fmt.Sprintf("%s/search?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=%d&pageToken=%s", baseURL, YT.evnVar.ApiKey, YT.evnVar.ChannelID, maxResults, nextPageToken)
+		} else {
+			url = fmt.Sprintf("%s/playlistItems?key=%s&playlistId=%s&part=snippet,id&order=date&maxResults=%d&pageToken=%s", baseURL, YT.evnVar.ApiKey, YT.evnVar.PlaylistID, maxResults, nextPageToken)
+		}
 
 		resp, err := http.Get(url)
 		if err != nil {
-			log.Print("Error:", err)
-			return videoData
+			log.Print(err)
+			return videoData, err
 		}
 		defer resp.Body.Close()
 
@@ -88,13 +100,13 @@ func (YT YouTubeChannel) getVideos() []SearchResult {
 			log.Printf("Error: received status code %d\n", resp.StatusCode)
 			body, _ := io.ReadAll(resp.Body)
 			log.Printf("Response body: %s\n", body)
-			return videoData
+			return videoData, err
 		}
 
 		var res APIResponse
 		if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
 			log.Print("Error decoding response:", err)
-			return videoData
+			return videoData, err
 		}
 
 		videoData = append(videoData, res.Items...)
@@ -110,7 +122,7 @@ func (YT YouTubeChannel) getVideos() []SearchResult {
 	}
 
 	log.Printf("Total videos fetched: %d\n", len(videoData))
-	return videoData
+	return videoData, nil
 }
 
 // normalizeTitle standardizes titles for consistent comparison

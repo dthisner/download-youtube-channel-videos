@@ -58,6 +58,7 @@ type APIResponse struct {
 type EnvVar struct {
 	ApiKey          string
 	ChannelID       string
+	PlaylistID      string
 	ChannelName     string
 	SeasonStartYear string
 }
@@ -68,8 +69,8 @@ func (e EnvVar) Validate() error {
 	if e.ApiKey == "" {
 		missingFields = append(missingFields, "YT_API_KEY")
 	}
-	if e.ChannelID == "" {
-		missingFields = append(missingFields, "YT_CHANNEL_ID")
+	if e.ChannelID == "" && e.PlaylistID == "" {
+		missingFields = append(missingFields, "YT_CHANNEL_ID or YT_PLAYLIST_ID")
 	}
 	if e.ChannelName == "" {
 		missingFields = append(missingFields, "YT_CHANNEL_NAME")
