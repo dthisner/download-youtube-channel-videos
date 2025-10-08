@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -105,12 +106,14 @@ func updateYTChannelData() {
 		log.Print("Did not find any data for: ", JSON_FILE_NAME)
 		log.Print("Will download all new data")
 	} else {
+		log.Print("Reading Existing File")
 		jsonByte, _ := io.ReadAll(jsonFile)
 		json.Unmarshal(jsonByte, &existingVideos)
 	}
 	defer jsonFile.Close()
 
-	newVideoData := getYTChannelVideos()
+	// newVideoData := getYTChannelVideos()
+	newVideoData := getYTChannelVideosDEBUG()
 
 	videosToAdd := FindNewVideos(existingVideos, newVideoData)
 	existingVideos = append(existingVideos, videosToAdd...)
@@ -121,6 +124,26 @@ func updateYTChannelData() {
 		log.Print("Problem with writting JSON", err)
 	}
 	log.Printf("Successfully saved the JSON file to: %s", JSON_FILE_NAME)
+}
+
+func getYTChannelVideosDEBUG() []Video {
+	jsonFile, err := os.Open("TestData/YouTube-Data-Response.json")
+	if err != nil {
+		log.Print("Problem reading the debugFile", err)
+
+	}
+	var videos []Video
+
+	var res APIResponse
+	if err := json.NewDecoder(jsonFile).Decode(&res); err != nil {
+		log.Print("Error decoding response:", err)
+		return videos
+	}
+
+	extractInformation(res.Items, &videos)
+
+	fmt.Printf("Total videos fetched: %d\n", len(videos))
+	return videos
 }
 
 func getYTChannelVideos() []Video {
@@ -189,7 +212,9 @@ func FindNewVideos(existing, newVideos []Video) []Video {
 	// Collect new videos that don't exist in the map
 	var videosToAdd []Video
 	for _, video := range newVideos {
+		log.Printf("Does %s exist already?", video.Title)
 		if _, exists := titleMap[normalizeTitle(video.Title)]; !exists {
+			log.Printf("%s Does NOT exist, lets add it!", video.Title)
 			videosToAdd = append(videosToAdd, video)
 		}
 	}
@@ -202,10 +227,11 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 	var currentSeason = 1
 	var tvShowName = os.Getenv("YT_SHOW_NAME")
 
-	yearToSeason := map[string]int{
-		"2016": 1, "2017": 2, "2018": 3, "2019": 4,
-		"2020": 5, "2021": 6, "2022": 7, "2023": 8,
-		"2024": 9, "2025": 10, "2026": 11,
+	seasonStartYear := os.Getenv("SEASON_START_YEAR")
+	startYear, err := strconv.Atoi(seasonStartYear)
+	if err != nil {
+		log.Printf("invalid SEASON_START_YEAR %q: %v", seasonStartYear, err)
+		return
 	}
 
 	for _, item := range res {
@@ -224,25 +250,27 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 		video.ChannelTitle = item.Snippet.ChannelTitle
 		video.Description = item.Snippet.Description
 
-		year := video.PublishedAt[0:4]
-		if season, exists := yearToSeason[year]; exists {
-			video.Season = fmt.Sprintf("%02d", season)
-
-			log.Printf("Season: %d CurrentSeasson: %d", season, currentSeason)
-			if season == currentSeason {
-				currentEpisode++
-				video.Episode = fmt.Sprintf("%02d", currentEpisode)
-			} else {
-				currentEpisode = 1
-				video.Episode = fmt.Sprintf("%02d", currentEpisode)
-				currentSeason = season
-			}
-
-			video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s", tvShowName, video.Season, video.Season, video.Episode, video.Title)
-			video.Filename = fmt.Sprintf("S%sE%s - %s", video.Season, video.Episode, video.Title)
-		} else {
-			video.Season = "00" // Default season or you could skip it
+		yearPub, err := strconv.Atoi(video.PublishedAt[0:4])
+		if err != nil {
+			log.Printf("invalid yearPublished %q: %v", video.PublishedAt[0:4], err)
+			continue
 		}
+
+		season := yearPub - startYear + 1
+		video.Season = fmt.Sprintf("%02d", season)
+
+		log.Printf("Season: %d CurrentSeasson: %d", season, currentSeason)
+		if season == currentSeason {
+			currentEpisode++
+			video.Episode = fmt.Sprintf("%02d", currentEpisode)
+		} else {
+			currentEpisode = 1
+			video.Episode = fmt.Sprintf("%02d", currentEpisode)
+			currentSeason = season
+		}
+
+		video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s", tvShowName, video.Season, video.Season, video.Episode, video.Title)
+		video.Filename = fmt.Sprintf("S%sE%s - %s", video.Season, video.Episode, video.Title)
 
 		*videos = append(*videos, video)
 		printData(video)

@@ -30,8 +30,9 @@ If you run with **go run main.go**, it will not recognize the other files and yo
 - [x] Dynamically check if the season exist, if not, create folder for it
 - [x] Create episode .nfo file
 - [x] Download and save the thumbnail and save it as follow: S01E01 - 2022 Money Masterclass-thumb
-- [ ] Right now, when re-running the script, it overwrites the previous downloaded data, we need to check and see if the video has already been added or not
+- [x] Right now, when re-running the script, it overwrites the previous downloaded data, we need to check and see if the video has already been added or not
 - [x] Re-Download all data from youtube to get the biggest thumbnail possible
-- [ ] Make Season with Year dynamic, check for the oldest year and put that as seasson 1
+- [x] Make Season with Year dynamic, check for the oldest year and put that as seasson 1
 - [ ] Delete Audio and Video files after
 - [x] Able to specify the Shows Name
+- [ ] Check to see what is the latest episode from that season to not overwrite
