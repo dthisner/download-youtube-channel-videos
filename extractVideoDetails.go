@@ -12,14 +12,20 @@ import (
 	"time"
 )
 
+type YouTubeChannel struct {
+	jsonFilePath        string
+	evnVar              EnvVar
+	currentVideoData    []Video
+	downloadedVideoData []Video
+}
+
 // get gets all video data based on the channel ID. Will loop until it has recieved all of them or reached the maxResult
-func updateYTChannelData() {
+func (YT YouTubeChannel) getData() {
 	var existingVideos []Video
 
-	jsonFile, err := os.Open(JSON_FILE_NAME)
+	jsonFile, err := os.Open(YT.jsonFilePath)
 	if err != nil {
-		log.Print("Did not find any data for: ", JSON_FILE_NAME)
-		log.Print("Will download all new data")
+		log.Print("Did not find any data for: ", YT.jsonFilePath)
 	} else {
 		log.Print("Reading Existing File")
 		jsonByte, _ := io.ReadAll(jsonFile)
@@ -27,23 +33,23 @@ func updateYTChannelData() {
 	}
 	defer jsonFile.Close()
 
-	newVideoData := getYTChannelVideos()
-	// newVideoData := getYTChannelVideosDEBUG()
+	newVideoData := YT.getVideos()
+	// newVideoData := YT.getVideosDEBUG()
 
-	extractedInfo := extractInformation(newVideoData)
+	extractedInfo := YT.extractInformation(newVideoData)
 
 	videosToAdd := FindNewVideos(existingVideos, extractedInfo)
 	existingVideos = append(existingVideos, videosToAdd...)
 
 	marshalled, _ := json.Marshal(existingVideos)
-	err = os.WriteFile(JSON_FILE_NAME, marshalled, 0644)
+	err = os.WriteFile(YT.jsonFilePath, marshalled, 0644)
 	if err != nil {
 		log.Print("Problem with writting JSON", err)
 	}
-	log.Printf("Successfully saved the JSON file to: %s", JSON_FILE_NAME)
+	log.Printf("Successfully saved the JSON file to: %s", YT.jsonFilePath)
 }
 
-func getYTChannelVideosDEBUG() []SearchResult {
+func (YT YouTubeChannel) getVideosDEBUG() []SearchResult {
 	jsonFile, err := os.Open("TestData/YouTube-Data-Response.json")
 	if err != nil {
 		log.Print("Problem reading the debugFile", err)
@@ -60,11 +66,8 @@ func getYTChannelVideosDEBUG() []SearchResult {
 	return res.Items
 }
 
-func getYTChannelVideos() []SearchResult {
-	apiKey := os.Getenv("YT_API_KEY")
-	channelID := os.Getenv("YT_CHANNEL_ID")
+func (YT YouTubeChannel) getVideos() []SearchResult {
 	baseURL := "https://www.googleapis.com/youtube/v3/search"
-
 	nextPageToken := ""
 	maxResults := 50 // Set your limit (max = 50)
 	totalFetched := 0
@@ -72,7 +75,7 @@ func getYTChannelVideos() []SearchResult {
 	var videoData []SearchResult
 
 	for {
-		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=20&pageToken=%s", baseURL, apiKey, channelID, nextPageToken)
+		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=%d&pageToken=%s", baseURL, YT.evnVar.ApiKey, YT.evnVar.ChannelID, maxResults, nextPageToken)
 
 		resp, err := http.Get(url)
 		if err != nil {
@@ -136,14 +139,14 @@ func FindNewVideos(existing, newVideos []Video) []Video {
 }
 
 // extractInformation takes the response JSON and saves it to our Video Struct
-func extractInformation(videoData []SearchResult) []Video {
+func (YT YouTubeChannel) extractInformation(videoData []SearchResult) []Video {
 	var currentEpisode = 1
 	var currentSeason = 1
-	var tvShowName = os.Getenv("YT_SHOW_NAME")
+	var tvShowName = YT.evnVar.ChannelName
 
-	startYear, err := strconv.Atoi(os.Getenv("SEASON_START_YEAR"))
+	startYear, err := strconv.Atoi(YT.evnVar.SeasonStartYear)
 	if err != nil {
-		log.Printf("invalid SEASON_START_YEAR %q: %v", os.Getenv("SEASON_START_YEAR"), err)
+		log.Printf("invalid SEASON_START_YEAR %q: %v", YT.evnVar.SeasonStartYear, err)
 		return nil
 	}
 

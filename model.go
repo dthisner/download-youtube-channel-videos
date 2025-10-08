@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"strings"
+)
+
 type Video struct {
 	Title        string `json:"title"`
 	Description  string `json:"description"`
@@ -47,4 +52,35 @@ type APIResponse struct {
 	ETag          string         `json:"etag"`
 	Items         []SearchResult `json:"items"`
 	NextPageToken string         `json:"nextPageToken,omitempty"`
+}
+
+type EnvVar struct {
+	ApiKey          string
+	ChannelID       string
+	ChannelName     string
+	SeasonStartYear string
+}
+
+func (e EnvVar) Validate() error {
+	var missingFields []string
+
+	if e.ApiKey == "" {
+		missingFields = append(missingFields, "YT_API_KEY")
+	}
+	if e.ChannelID == "" {
+		missingFields = append(missingFields, "YT_CHANNEL_ID")
+	}
+	if e.ChannelName == "" {
+		missingFields = append(missingFields, "YT_CHANNEL_NAME")
+	}
+	if e.SeasonStartYear == "" {
+		missingFields = append(missingFields, "SEASON_START_YEAR")
+	}
+
+	// If there are missing fields, return a combined error
+	if len(missingFields) > 0 {
+		return fmt.Errorf("missing environment variables: %s", strings.Join(missingFields, ", "))
+	}
+
+	return nil
 }

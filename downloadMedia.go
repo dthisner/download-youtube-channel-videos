@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -11,9 +12,83 @@ import (
 	"github.com/kkdai/youtube/v2"
 )
 
-// downloadVideo gets the YouTube video, looking for 720p format.
+type Download struct {
+	jsonFilePath string
+	showName     string
+}
+
+func (d Download) Videos() {
+	jsonFile, err := os.Open(d.jsonFilePath)
+	if err != nil {
+		panic(err)
+	}
+	defer jsonFile.Close()
+
+	var videos []Video
+
+	jsonByte, _ := io.ReadAll(jsonFile)
+	json.Unmarshal(jsonByte, &videos)
+
+	for i, video := range videos {
+		if video.Downloaded {
+			log.Printf("Video %s has already been Downloaded", video.Title)
+			continue
+		}
+
+		log.Printf("Downloading Video %s", video.Title)
+
+		d.checkSeasonFolderExist(video.Season)
+		generateEpisodeNfo(video)
+		err = d.image(video)
+		if err != nil {
+			log.Print(err)
+		} else {
+			log.Printf("Successfully Downloaded image to: %s", video.Filepath)
+			videos[i].ImageSaved = true
+		}
+
+		err = d.video(video)
+		if err != nil {
+			log.Print(err)
+		} else {
+			videos[i].Downloaded = true
+		}
+
+		videosJSON, _ := json.Marshal(videos)
+		err = os.WriteFile(d.jsonFilePath, videosJSON, 0644)
+		if err != nil {
+			log.Print("Problem with writting JSON", err)
+		}
+
+		log.Print("Successfully Downloaded, merged the video and updated the JSON file")
+	}
+}
+
+// checkSeasonFolderExist creates the season folder if it's missing
+func (d Download) checkSeasonFolderExist(season string) error {
+	var tvShowName = d.showName
+	folderPath := fmt.Sprintf("%s/Season %s", tvShowName, season)
+
+	_, err := os.Stat(folderPath)
+
+	if os.IsNotExist(err) {
+		// Create the folder (and any necessary parent directories)
+		err := os.MkdirAll(folderPath, 0755) // 0755 is the permission mode
+		if err != nil {
+			return fmt.Errorf("error creating folder: %s", err)
+
+		}
+		log.Print("Folder created successfully: ", folderPath)
+	} else {
+		log.Print("Folder already exists:", folderPath)
+	}
+
+	return nil
+}
+
+// DownloadVideo gets the YouTube video, looking for 720p format.
 // Have to get both audio and video stream to then merge them into one file
-func downloadVideo(v Video) error {
+func (d Download) video(v Video) error {
 	client := youtube.Client{}
 
 	video, err := client.GetVideo(v.URL)
@@ -39,12 +114,12 @@ func downloadVideo(v Video) error {
 	}
 
 	videoFileName := v.Filepath + "_video.mp4"
-	err = downloadStream(client, video, videoFormat, videoFileName)
+	err = d.stream(client, video, videoFormat, videoFileName)
 	if err != nil {
 		return err
 	}
 	audioFileName := v.Filepath + "_audio.mp4"
-	err = downloadStream(client, video, audioFormat, audioFileName)
+	err = d.stream(client, video, audioFormat, audioFileName)
 	if err != nil {
 		return err
 	}
@@ -78,8 +153,8 @@ func mergeAudioVideo(filePath, videoFileName, audioFileName string) error {
 	return nil
 }
 
-// downloadStream gets the YouTube audio or video stream and downloads it
-func downloadStream(client youtube.Client, video *youtube.Video, format *youtube.Format, filename string) error {
+// DownloadStream gets the YouTube audio or video stream and Downloads it
+func (d Download) stream(client youtube.Client, video *youtube.Video, format *youtube.Format, filename string) error {
 	stream, _, err := client.GetStream(video, format)
 	if err != nil {
 		return fmt.Errorf("get the video stream - %s", err)
@@ -97,13 +172,13 @@ func downloadStream(client youtube.Client, video *youtube.Video, format *youtube
 		return fmt.Errorf("copy - Problem streaming the video - %s", err)
 	}
 
-	fmt.Printf("Stream downloaded successfully: %s\n", filename)
+	fmt.Printf("Stream Downloaded successfully: %s\n", filename)
 
 	return nil
 }
 
-// downloadImage downloads an image from the given URL and saves it to the specified file
-func downloadImage(video Video) error {
+// DownloadImage Downloads an image from the given URL and saves it to the specified file
+func (d Download) image(video Video) error {
 	log.Printf("Downloading Thumbnail to: %s", video.Title)
 
 	response, err := http.Get(video.ThumbnailURL)
