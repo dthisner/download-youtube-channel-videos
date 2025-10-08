@@ -20,10 +20,10 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	// channelID := os.Getenv("YT_CHANNEL_ID")
-	// getYouTubeChannelVideos(channelID)
+	channelID := os.Getenv("YT_CHANNEL_ID")
+	getYouTubeChannelVideos(channelID)
 
-	downloadAndOrganizeVideos()
+	// downloadAndOrganizeVideos()
 }
 
 func downloadAndOrganizeVideos() {
@@ -74,7 +74,8 @@ func downloadAndOrganizeVideos() {
 
 // checkSeasonFolderExist creates the season folder if it's missing
 func checkSeasonFolderExist(season string) error {
-	folderPath := fmt.Sprintf("After Skool/Season %s", season)
+	var tvShowName = os.Getenv("YT_SHOW_NAME")
+	folderPath := fmt.Sprintf("%s/Season %s", tvShowName, season)
 
 	_, err := os.Stat(folderPath)
 
@@ -142,7 +143,7 @@ func getYouTubeChannelVideos(channelID string) {
 	fmt.Printf("Total videos fetched: %d\n", len(videos))
 
 	videosJSON, _ := json.Marshal(videos)
-	err := os.WriteFile(JSON_FILE_NAME, videosJSON, 0644)
+	err := os.WriteFile(JSON_FILE_NAME+"updated", videosJSON, 0644)
 	if err != nil {
 		log.Print("Problem with writting JSON", err)
 	}
@@ -154,6 +155,7 @@ func getYouTubeChannelVideos(channelID string) {
 func extractInformation(res []SearchResult, videos *[]Video) {
 	var currentEpisode = 1
 	var currentSeason = 1
+	var tvShowName = os.Getenv("YT_SHOW_NAME")
 
 	yearToSeason := map[string]int{
 		"2016": 1, "2017": 2, "2018": 3, "2019": 4,
@@ -191,7 +193,7 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 				currentSeason = season
 			}
 
-			video.Filepath = fmt.Sprintf("After Skool/Season %s/S%sE%s - %s", video.Season, video.Season, video.Episode, video.Title)
+			video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s", tvShowName, video.Season, video.Season, video.Episode, video.Title)
 			video.Filename = fmt.Sprintf("S%sE%s - %s", video.Season, video.Episode, video.Title)
 
 		} else {
