@@ -55,6 +55,7 @@ func (download Download) Videos() {
 				removeMediaFiles(video)
 			} else {
 				videos[i].Downloaded = true
+				videos[i].Error = ""
 			}
 		} else {
 			log.Print("Video already downloaded")
