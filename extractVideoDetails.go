@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -209,27 +210,67 @@ func (YT YouTubeChannel) extractInformation(videoData []SearchResult) []Video {
 			continue
 		}
 
-		season := yearPub - startYear + 1
-		video.Season = fmt.Sprintf("%02d", season)
-
-		log.Printf("Season: %d CurrentSeasson: %d", season, currentSeason)
-		if season == currentSeason {
-			currentEpisode++
-			video.Episode = fmt.Sprintf("%02d", currentEpisode)
+		// Splitting between getting ALL videos from a channel VS getting something that have seasons and episodes in the name
+		if strings.Contains(normalizeTitle(video.Title), "episode") && strings.Contains(normalizeTitle(video.Title), "season") {
+			video.Title, video.Episode, video.Season, err = extractEpisodeInfo(video.Title)
+			if err != nil {
+				log.Print("Problem with extracting episode info", err)
+			}
 		} else {
-			currentEpisode = 1
+			season := yearPub - startYear + 1
+			video.Season = fmt.Sprintf("%02d", season)
+
+			log.Printf("Season: %d CurrentSeasson: %d", season, currentSeason)
+			if season == currentSeason {
+				currentEpisode++
+			} else {
+				currentEpisode = 1
+				currentSeason = season
+			}
+
 			video.Episode = fmt.Sprintf("%02d", currentEpisode)
-			currentSeason = season
 		}
 
-		video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s", tvShowName, video.Season, video.Season, video.Episode, video.Title)
-		video.Filename = fmt.Sprintf("S%sE%s - %s", video.Season, video.Episode, video.Title)
+		video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s",
+			tvShowName, video.Season, video.Season, video.Episode, video.Title)
+
+		video.Filename = fmt.Sprintf("S%sE%s - %s",
+			video.Season, video.Episode, video.Title)
 
 		videosData = append(videosData, video)
 		printData(video)
 	}
 
 	return videosData
+}
+
+func extractEpisodeInfo(input string) (string, string, string, error) {
+	// Define the regex pattern to match the title, episode, and season
+	// Assumes format: "Title | ... EPISODE <number> | Season <number>"
+	pattern := `^(.*?)\s*\|\s*.*EPISODE\s+(\d+)\s*\|\s*Season\s+(\d+)`
+	re := regexp.MustCompile(pattern)
+
+	// Find matches
+	matches := re.FindStringSubmatch(input)
+	if len(matches) != 4 {
+		return "", "", "", fmt.Errorf("invalid format: %s", input)
+	}
+
+	title := strings.TrimSpace(matches[1])
+	episodeStr := matches[2]
+	seasonStr := matches[3]
+
+	// Add leading zero to season and episode if needed
+	season := episodeStr
+	if len(seasonStr) == 1 {
+		season = "0" + seasonStr
+	}
+	episode := episodeStr
+	if len(episodeStr) == 1 {
+		episode = "0" + episodeStr
+	}
+
+	return title, season, episode, nil
 }
 
 // getThumbUrl looks for the biggest thumbnail and saves that as the best option for Thumbnail URL
