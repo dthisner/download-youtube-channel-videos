@@ -82,19 +82,19 @@ func mergeAudioVideo(filePath, videoFileName, audioFileName string) error {
 func downloadStream(client youtube.Client, video *youtube.Video, format *youtube.Format, filename string) error {
 	stream, _, err := client.GetStream(video, format)
 	if err != nil {
-		return fmt.Errorf("WithAudioChannels - %s", err)
+		return fmt.Errorf("get the video stream - %s", err)
 	}
 	defer stream.Close()
 
 	file, err := os.Create(filename)
 	if err != nil {
-		return fmt.Errorf("create - %s", err)
+		return fmt.Errorf("create destination file - %s", err)
 	}
 	defer file.Close()
 
 	_, err = io.Copy(file, stream)
 	if err != nil {
-		return fmt.Errorf("copy - %s", err)
+		return fmt.Errorf("copy - Problem streaming the video - %s", err)
 	}
 
 	fmt.Printf("Stream downloaded successfully: %s\n", filename)
