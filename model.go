@@ -19,6 +19,7 @@ type Video struct {
 	ImageSaved   bool   `json:"imageSaved"`
 	Filename     string `json:"filename"`
 	Filepath     string `json:"filepath"`
+	Error        string `json:"error"`
 }
 
 type SearchResult struct {

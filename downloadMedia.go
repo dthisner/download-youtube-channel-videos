@@ -30,10 +30,7 @@ func (download Download) Videos() {
 	json.Unmarshal(jsonByte, &videos)
 
 	for i, video := range videos {
-		log.Printf(`
-		######################################################################
-		########### %s ###########
-		######################################################################`, video.Title)
+		printVideoTitle(video.Title)
 
 		download.checkSeasonFolderExist(video.Season)
 		generateEpisodeNfo(video)
@@ -54,6 +51,8 @@ func (download Download) Videos() {
 			err = download.video(video)
 			if err != nil {
 				log.Print(err)
+				videos[i].Error = err.Error()
+				removeMediaFiles(video)
 			} else {
 				videos[i].Downloaded = true
 			}
@@ -98,6 +97,7 @@ func (d Download) checkSeasonFolderExist(season string) error {
 func (d Download) video(v Video) error {
 	client := youtube.Client{}
 
+	log.Print("Downloading video from: ", v.URL)
 	video, err := client.GetVideo(v.URL)
 	if err != nil {
 		return fmt.Errorf("error fetching video info: %v", err)
@@ -140,6 +140,16 @@ func (d Download) video(v Video) error {
 	_ = os.Remove(audioFileName)
 
 	return nil
+}
+
+func removeMediaFiles(v Video) {
+	audioFileName := v.Filepath + "_audio.mp4"
+	videoFileName := v.Filepath + "_video.mp4"
+
+	_ = os.Remove(videoFileName)
+	_ = os.Remove(audioFileName)
+	_ = os.Remove(v.Filepath + ".mp4")
+
 }
 
 // mergeAudioVideo takes the audio and video file and merges it into one file
@@ -207,4 +217,18 @@ func (d Download) image(video Video) error {
 	}
 
 	return nil
+}
+
+func printVideoTitle(title string) {
+	padding := ""
+	titleLenght := len(title) + 23
+
+	for i := 1; i < titleLenght; i++ {
+		padding = padding + "#"
+	}
+
+	log.Printf(`
+		%s
+		########## %s ##########
+		%s`, padding, title, padding)
 }
