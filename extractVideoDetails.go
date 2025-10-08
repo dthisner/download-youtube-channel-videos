@@ -245,9 +245,9 @@ func (YT YouTubeChannel) extractInformation(videoData []SearchResult) []Video {
 }
 
 func extractEpisodeInfo(input string) (string, string, string, error) {
-	// Define the regex pattern to match the title, episode, and season
+	// Define the regex pattern to match the title, episode, and season (case-insensitive for EPISODE and Season)
 	// Assumes format: "Title | ... EPISODE <number> | Season <number>"
-	pattern := `^(.*?)\s*\|\s*.*EPISODE\s+(\d+)\s*\|\s*Season\s+(\d+)`
+	pattern := `^(.*?)\s*\|\s*.*[Ee][Pp][Ii][Ss][Oo][Dd][Ee]\s+(\d+)\s*\|\s*[Ss][Ee][Aa][Ss][Oo][Nn]\s+(\d+)`
 	re := regexp.MustCompile(pattern)
 
 	// Find matches
