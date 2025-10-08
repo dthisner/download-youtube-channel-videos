@@ -13,15 +13,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var JSON_FILE_NAME = "all_channel_videos.json"
+var JSON_FILE_NAME = ""
 
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	channelID := os.Getenv("YT_CHANNEL_ID")
-	getYouTubeChannelVideos(channelID)
+	channelName := os.Getenv("YT_SHOW_NAME")
+	JSON_FILE_NAME = fmt.Sprintf("%s-channel-data.json", channelName)
+
+	updateYTChannelData()
 
 	// downloadAndOrganizeVideos()
 }
@@ -94,9 +96,36 @@ func checkSeasonFolderExist(season string) error {
 	return nil
 }
 
-// getYouTubeChannelVideos gets all youtube videos based on the channel ID. Will loop until it has recieved all of them or reached the maxResult
-func getYouTubeChannelVideos(channelID string) {
+// get gets all video data based on the channel ID. Will loop until it has recieved all of them or reached the maxResult
+func updateYTChannelData() {
+	var existingVideos []Video
+
+	jsonFile, err := os.Open(JSON_FILE_NAME)
+	if err != nil {
+		log.Print("Did not find any data for: ", JSON_FILE_NAME)
+		log.Print("Will download all new data")
+	} else {
+		jsonByte, _ := io.ReadAll(jsonFile)
+		json.Unmarshal(jsonByte, &existingVideos)
+	}
+	defer jsonFile.Close()
+
+	newVideoData := getYTChannelVideos()
+
+	videosToAdd := FindNewVideos(existingVideos, newVideoData)
+	existingVideos = append(existingVideos, videosToAdd...)
+
+	marshalled, _ := json.Marshal(existingVideos)
+	err = os.WriteFile(JSON_FILE_NAME, marshalled, 0644)
+	if err != nil {
+		log.Print("Problem with writting JSON", err)
+	}
+	log.Printf("Successfully saved the JSON file to: %s", JSON_FILE_NAME)
+}
+
+func getYTChannelVideos() []Video {
 	apiKey := os.Getenv("YT_API_KEY")
+	channelID := os.Getenv("YT_CHANNEL_ID")
 	baseURL := "https://www.googleapis.com/youtube/v3/search"
 
 	nextPageToken := ""
@@ -111,7 +140,7 @@ func getYouTubeChannelVideos(channelID string) {
 		resp, err := http.Get(url)
 		if err != nil {
 			log.Print("Error:", err)
-			return
+			return videos
 		}
 		defer resp.Body.Close()
 
@@ -119,13 +148,13 @@ func getYouTubeChannelVideos(channelID string) {
 			log.Printf("Error: received status code %d\n", resp.StatusCode)
 			body, _ := io.ReadAll(resp.Body)
 			log.Printf("Response body: %s\n", body)
-			return
+			return videos
 		}
 
 		var res APIResponse
 		if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
 			log.Print("Error decoding response:", err)
-			return
+			return videos
 		}
 
 		extractInformation(res.Items, &videos)
@@ -141,14 +170,30 @@ func getYouTubeChannelVideos(channelID string) {
 	}
 
 	fmt.Printf("Total videos fetched: %d\n", len(videos))
+	return videos
+}
 
-	videosJSON, _ := json.Marshal(videos)
-	err := os.WriteFile(JSON_FILE_NAME+"updated", videosJSON, 0644)
-	if err != nil {
-		log.Print("Problem with writting JSON", err)
+// normalizeTitle standardizes titles for consistent comparison
+func normalizeTitle(title string) string {
+	return strings.TrimSpace(strings.ToLower(title))
+}
+
+// FindNewVideos compares new videos against existing ones and returns new ones
+func FindNewVideos(existing, newVideos []Video) []Video {
+	// Build a map of existing titles for O(1) lookups
+	titleMap := make(map[string]struct{})
+	for _, video := range existing {
+		titleMap[normalizeTitle(video.Title)] = struct{}{}
 	}
 
-	log.Print("Successfully saved the JSON file")
+	// Collect new videos that don't exist in the map
+	var videosToAdd []Video
+	for _, video := range newVideos {
+		if _, exists := titleMap[normalizeTitle(video.Title)]; !exists {
+			videosToAdd = append(videosToAdd, video)
+		}
+	}
+	return videosToAdd
 }
 
 // extractInformation takes the response JSON and saves it to our Video Struct
@@ -195,7 +240,6 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 
 			video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s", tvShowName, video.Season, video.Season, video.Episode, video.Title)
 			video.Filename = fmt.Sprintf("S%sE%s - %s", video.Season, video.Episode, video.Title)
-
 		} else {
 			video.Season = "00" // Default season or you could skip it
 		}
