@@ -72,47 +72,53 @@ func (YT YouTubeChannel) getVideosDEBUG() []SearchResult {
 	return res.Items
 }
 
+const (
+	baseURL           = "https://www.googleapis.com/youtube/v3"
+	searchEndpoint    = "search"
+	playlistEndpoint  = "playlistItems"
+	defaultPart       = "snippet,id"
+	defaultOrder      = "date"
+	defaultMaxResults = 50
+)
+
 func (YT YouTubeChannel) getVideos() ([]SearchResult, error) {
-	baseURL := "https://www.googleapis.com/youtube/v3"
 	nextPageToken := ""
-	maxResults := 50 // Set your limit (max = 50)
 	totalFetched := 0
 
+	client := &http.Client{}
 	var videoData []SearchResult
 
 	for {
-		var url string
-
-		if YT.evnVar.ChannelID != "" {
-			url = fmt.Sprintf("%s/search?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=%d&pageToken=%s", baseURL, YT.evnVar.ApiKey, YT.evnVar.ChannelID, maxResults, nextPageToken)
-		} else {
-			url = fmt.Sprintf("%s/playlistItems?key=%s&playlistId=%s&part=snippet,id&order=date&maxResults=%d&pageToken=%s", baseURL, YT.evnVar.ApiKey, YT.evnVar.PlaylistID, maxResults, nextPageToken)
+		url, err := YT.buildURL(nextPageToken)
+		if err != nil {
+			log.Printf("Error building URL: %v", err)
+			return videoData, err
 		}
 
-		resp, err := http.Get(url)
+		resp, err := client.Get(url)
 		if err != nil {
-			log.Print(err)
+			log.Printf("Error fetching URL %s: %v", url, err)
 			return videoData, err
 		}
 		defer resp.Body.Close()
 
 		if resp.StatusCode != http.StatusOK {
-			log.Printf("Error: received status code %d\n", resp.StatusCode)
 			body, _ := io.ReadAll(resp.Body)
-			log.Printf("Response body: %s\n", body)
+			err := fmt.Errorf("received status code %d for URL %s: %s", resp.StatusCode, url, body)
+			log.Print(err)
 			return videoData, err
 		}
 
 		var res APIResponse
 		if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
-			log.Print("Error decoding response:", err)
+			log.Printf("Error decoding response from %s: %v", url, err)
 			return videoData, err
 		}
 
 		videoData = append(videoData, res.Items...)
 		totalFetched++
 
-		if res.NextPageToken == "" || totalFetched >= maxResults {
+		if res.NextPageToken == "" || totalFetched >= defaultMaxResults {
 			break
 		}
 
@@ -123,6 +129,23 @@ func (YT YouTubeChannel) getVideos() ([]SearchResult, error) {
 
 	log.Printf("Total videos fetched: %d\n", len(videoData))
 	return videoData, nil
+}
+
+// buildYouTubeURL constructs the API URL for either search or playlistItems endpoint.
+func (YT YouTubeChannel) buildURL(pageToken string) (string, error) {
+	var endpoint, idParam, idValue string
+	if YT.evnVar.ChannelID != "" {
+		endpoint = searchEndpoint
+		idParam = "channelId"
+		idValue = YT.evnVar.ChannelID
+	} else {
+		endpoint = playlistEndpoint
+		idParam = "playlistId"
+		idValue = YT.evnVar.PlaylistID
+	}
+
+	return fmt.Sprintf("%s/%s?key=%s&%s=%s&part=%s&order=%s&maxResults=%d&pageToken=%s",
+		baseURL, endpoint, YT.evnVar.ApiKey, idParam, idValue, defaultPart, defaultOrder, defaultMaxResults, pageToken), nil
 }
 
 // normalizeTitle standardizes titles for consistent comparison
