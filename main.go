@@ -31,9 +31,8 @@ func main() {
 
 	JSON_FILE_NAME = fmt.Sprintf("%s-channel-data.json", channelName)
 
-	updateYTChannelData()
-
-	// downloadAndOrganizeVideos()
+	// updateYTChannelData()
+	downloadAndOrganizeVideos()
 }
 
 func downloadAndOrganizeVideos() {
@@ -78,6 +77,7 @@ func downloadAndOrganizeVideos() {
 		if err != nil {
 			log.Print("Problem with writting JSON", err)
 		}
+
 		log.Print("Successfully downloaded, merged the video and updated the JSON file")
 	}
 }
