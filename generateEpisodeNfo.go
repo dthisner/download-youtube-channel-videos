@@ -123,6 +123,13 @@ func generateEpisodeNfo(video Video) {
 		UserNote:         "",
 	}
 
+	filename := fmt.Sprintf("%s.nfo", video.Filepath)
+
+	if _, err := os.Stat(filename); err == nil {
+		log.Print("NFO file already exist, skipping")
+		return
+	}
+
 	// Parse the template
 	tmpl, err := template.New("episodedetails").Parse(xmlTemplate)
 	if err != nil {
@@ -130,7 +137,6 @@ func generateEpisodeNfo(video Video) {
 		return
 	}
 
-	filename := fmt.Sprintf("%s.nfo", video.Filepath)
 	file, err := os.Create(filename)
 	if err != nil {
 		log.Print("Error creating file:", err)

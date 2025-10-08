@@ -17,8 +17,8 @@ type Download struct {
 	showName     string
 }
 
-func (d Download) Videos() {
-	jsonFile, err := os.Open(d.jsonFilePath)
+func (download Download) Videos() {
+	jsonFile, err := os.Open(download.jsonFilePath)
 	if err != nil {
 		panic(err)
 	}
@@ -30,32 +30,39 @@ func (d Download) Videos() {
 	json.Unmarshal(jsonByte, &videos)
 
 	for i, video := range videos {
-		if video.Downloaded {
-			log.Printf("Video %s has already been Downloaded", video.Title)
-			continue
-		}
+		log.Printf(`
+		######################################################################
+		########### %s ###########
+		######################################################################`, video.Title)
 
-		log.Printf("Downloading Video %s", video.Title)
-
-		d.checkSeasonFolderExist(video.Season)
+		download.checkSeasonFolderExist(video.Season)
 		generateEpisodeNfo(video)
-		err = d.image(video)
-		if err != nil {
-			log.Print(err)
+
+		if !video.ImageSaved {
+			err = download.image(video)
+			if err != nil {
+				log.Print(err)
+			} else {
+				log.Printf("Successfully Downloaded image to: %s", video.Filepath)
+				videos[i].ImageSaved = true
+			}
 		} else {
-			log.Printf("Successfully Downloaded image to: %s", video.Filepath)
-			videos[i].ImageSaved = true
+			log.Print("Thumbnail already downloaded")
 		}
 
-		err = d.video(video)
-		if err != nil {
-			log.Print(err)
+		if !video.Downloaded {
+			err = download.video(video)
+			if err != nil {
+				log.Print(err)
+			} else {
+				videos[i].Downloaded = true
+			}
 		} else {
-			videos[i].Downloaded = true
+			log.Print("Video already downloaded")
 		}
 
 		videosJSON, _ := json.Marshal(videos)
-		err = os.WriteFile(d.jsonFilePath, videosJSON, 0644)
+		err = os.WriteFile(download.jsonFilePath, videosJSON, 0644)
 		if err != nil {
 			log.Print("Problem with writting JSON", err)
 		}
