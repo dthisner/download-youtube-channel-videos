@@ -13,8 +13,11 @@ brew install ffmpeg
 Create a .env file with following values:
 
 ```
-YT_API_KEY=value
-YT_CHANNEL_ID=value
+YT_API_KEY=
+YT_CHANNEL_NAME=
+YT_CHANNEL_ID=
+YT_PLAYLIST_ID=
+SEASON_START_YEAR=
 ```
 
 Run it with **go run .**
