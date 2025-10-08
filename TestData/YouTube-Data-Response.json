@@ -1,0 +1,692 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "BDMaMa8pfwyKdmzpkX1HNcP9IQE",
+  "nextPageToken": "CBQQAA",
+  "regionCode": "SE",
+  "pageInfo": {
+    "totalResults": 279,
+    "resultsPerPage": 20
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "zKw5_4ltF7JN0eEIzvoJ-1_H_aE",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "M4s13muQzgg"
+      },
+      "snippet": {
+        "publishedAt": "2025-09-23T16:00:39Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "The Cobra Effect: How Good Intentions Lead to Bad Outcomes",
+        "description": "Empower your critical thinking and get the full picture on every story. Subscribe through my link https://ground.news/afterskool to ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/M4s13muQzgg/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/M4s13muQzgg/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/M4s13muQzgg/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-09-23T16:00:39Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "L7r4-mwzsC66mzX3dXaa_MKODsE",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "oq-otobHAGY"
+      },
+      "snippet": {
+        "publishedAt": "2025-09-09T16:01:09Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Carl Jung - Love the Enemy Within (Read by Alan Watts)",
+        "description": "Carl Gustav Jung (26 July 1875 – 6 June 1961) was a Swiss psychiatrist, psychotherapist, and psychologist who founded the ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/oq-otobHAGY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/oq-otobHAGY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/oq-otobHAGY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-09-09T16:01:09Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "4UyOW6aNKaVr4KqE6SrNjvQmTno",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "UEUXThiwZvQ"
+      },
+      "snippet": {
+        "publishedAt": "2025-08-26T16:00:23Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Neuroscience Hacks to Manifest Your Dream Life - Dr. Tara Swart",
+        "description": "Go to today's sponsor https://www.Strawberry.me/afterskool to connect with a career coach today! Dr. Tara Swart is a ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/UEUXThiwZvQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/UEUXThiwZvQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/UEUXThiwZvQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-08-26T16:00:23Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "jGc-NNjmzOzMerCLkGXhhiFR4kk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "cqz4-HVE2sY"
+      },
+      "snippet": {
+        "publishedAt": "2025-08-12T16:04:21Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "How To Reclaim Your Attention (and your life) - Dr. K",
+        "description": "This is a clip from the Know Thyself Podcast by André Duqum and Dr. K. Full podcast can be heard here ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/cqz4-HVE2sY/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/cqz4-HVE2sY/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/cqz4-HVE2sY/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-08-12T16:04:21Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "A80jJ44tiP58hRuYDvuSIdeuTl0",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "EQK-Gj4wl1U"
+      },
+      "snippet": {
+        "publishedAt": "2025-07-29T15:59:48Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "These Moments Mean Everything",
+        "description": "This beautiful poem illustrates the small little moments that mean everything. The little hand in yours, the bedtime stories, the ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/EQK-Gj4wl1U/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/EQK-Gj4wl1U/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/EQK-Gj4wl1U/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-07-29T15:59:48Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "84ByUkfUPP8VqZckSNOp_UBwPEg",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "keQZgd-sppk"
+      },
+      "snippet": {
+        "publishedAt": "2025-07-15T16:00:49Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Beware of Unearned Treasure - Lessons from &#39;The Alchemist&#39; by Paulo Coelho",
+        "description": "In this episode, we explore 'The Alchemist' by Paulo Coelho, which is a book packed with pearls of timeless wisdom. One of the ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/keQZgd-sppk/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/keQZgd-sppk/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/keQZgd-sppk/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-07-15T16:00:49Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "XkoV9kan4jC8jz4-hc3QDp3XZ-0",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "86k8N4YsA7c"
+      },
+      "snippet": {
+        "publishedAt": "2025-06-17T16:05:53Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Is AI Apocalypse Inevitable? - Tristan Harris",
+        "description": "In this episode, Tristan Harris explores the 2 most probable paths that AI will follow, one leading to chaos and the other to dystopia ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/86k8N4YsA7c/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/86k8N4YsA7c/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/86k8N4YsA7c/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-06-17T16:05:53Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "fhVDN98Hckg5M3G4gPaxPwMdYMo",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "oiTK2KFLlH4"
+      },
+      "snippet": {
+        "publishedAt": "2025-06-03T14:54:15Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "The Buddhabrot - The Fractal That Unlocks Carl Jung’s Deepest Theory",
+        "description": "A few months ago, a groundbreaking study was published that linked fractal geometry to Carl Jung's theories. I contacted Dr Harry ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/oiTK2KFLlH4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/oiTK2KFLlH4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/oiTK2KFLlH4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-06-03T14:54:15Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "qcjJ7RnmZWbXhtUaGUgZ_w-Rhbc",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "jxqRl_GYJds"
+      },
+      "snippet": {
+        "publishedAt": "2025-05-20T14:08:55Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "What Was Daily Life in Ancient Rome Really Like? - Gregory Aldrete",
+        "description": "In this video, Gregory Aldrete explains what life was really like in Ancient Rome. We are often given images on Ancient Rome as a ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/jxqRl_GYJds/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/jxqRl_GYJds/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/jxqRl_GYJds/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-05-20T14:08:55Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "m3YJbki8pYZ53mO2l58Yt8j5F9M",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "OJs0XwEtJTI"
+      },
+      "snippet": {
+        "publishedAt": "2025-05-07T14:42:45Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "You Can&#39;t Give Away What You Don&#39;t Have - Wayne Dyer",
+        "description": "Use code afterskool at https://incogni.com/afterskool to get an exclusive 60% off. Wayne W. Dyer (May 10, 1940 – August 29, ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/OJs0XwEtJTI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/OJs0XwEtJTI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/OJs0XwEtJTI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-05-07T14:42:45Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "CMAonXh-n1iWfKmwRXC3ZC-XaA8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "_zjR2I5TruA"
+      },
+      "snippet": {
+        "publishedAt": "2025-04-24T13:48:06Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Miyamoto Musashi - How to Master Your Emotions",
+        "description": "Miyamoto Musashi 宮本武蔵 (1584 – 13 June 1645) was a Japanese swordsman, strategist, artist, and writer who became ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/_zjR2I5TruA/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/_zjR2I5TruA/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/_zjR2I5TruA/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-04-24T13:48:06Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "K9RWBmh5kSEiS6hW_oVLKhHIjEc",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "CxTPOaxxNqw"
+      },
+      "snippet": {
+        "publishedAt": "2025-04-01T16:07:51Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "The Hyper-Real Revolution: Why Real Experiences Are Becoming Obsolete - Rick Roderick",
+        "description": "Empower your critical thinking and get the full picture on every story. Subscribe through my link https://ground.news/afterskool to ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/CxTPOaxxNqw/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/CxTPOaxxNqw/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/CxTPOaxxNqw/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-04-01T16:07:51Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "igFnqY-chLW9V715C-xEbYpn6-g",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "IM48HKJbu70"
+      },
+      "snippet": {
+        "publishedAt": "2025-03-18T16:06:42Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "The Formula for Perfect Sleep - World&#39;s #1 Sleep Expert, Matt Walker",
+        "description": "Matthew Walker is Professor of Neuroscience and Psychology at the University of California, Berkeley, and Founder and Director ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/IM48HKJbu70/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/IM48HKJbu70/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/IM48HKJbu70/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-03-18T16:06:42Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "ZwoYiMi_gsSnJlpNTma55kwt4qk",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "2Grski61aHc"
+      },
+      "snippet": {
+        "publishedAt": "2025-03-04T17:12:25Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Dr Joe Dispenza - Break the Habit of Being Yourself",
+        "description": "Dr Joe Dispenza is a New York Times best-selling author, international lecturer, researcher, and educator, Dr Joe Dispenza ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/2Grski61aHc/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/2Grski61aHc/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/2Grski61aHc/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-03-04T17:12:25Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "8uwlgHnRk9a1lH28hrwwK-82WEQ",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "3Dqv3VmdOWQ"
+      },
+      "snippet": {
+        "publishedAt": "2025-02-18T17:07:03Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Your Brain on Birth Control - Dr. Sarah Hill",
+        "description": "Dr. Sarah Hill is an award-winning research psychologist and professor with expertise in women, health, and sexual psychology.",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/3Dqv3VmdOWQ/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/3Dqv3VmdOWQ/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/3Dqv3VmdOWQ/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-02-18T17:07:03Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "gqSBoJ1oGLWnotuCH2EzY68GDN8",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "tZmXIm29IMs"
+      },
+      "snippet": {
+        "publishedAt": "2025-02-04T17:01:57Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Robert Greene - How People Become Deep Narcissists",
+        "description": "Robert Greene (born May 14, 1959) is an American author of books on strategy, power, and seduction. He has written seven ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/tZmXIm29IMs/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/tZmXIm29IMs/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/tZmXIm29IMs/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-02-04T17:01:57Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "SdwipHgbMuAugj8z0lkAX35amS0",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "4hzOd81YJG0"
+      },
+      "snippet": {
+        "publishedAt": "2025-01-21T17:01:57Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "The Symbolic Meaning of REBIRTH - Agrippa&#39;s Diary",
+        "description": "Here's another incredible collaboration with Agrippa's Diary - a captivating gateway to the occult world of Alchemy, Esotericism, ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/4hzOd81YJG0/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/4hzOd81YJG0/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/4hzOd81YJG0/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-01-21T17:01:57Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "vtdlLg6jdnSro7on4-gr_cKG4zI",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "OXBwUrgE-kI"
+      },
+      "snippet": {
+        "publishedAt": "2025-01-07T17:00:38Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "How To Be Fully Alive Now - Alan Watts",
+        "description": "In this animation, Alan Watts explains how we are failing to experience reality for what it is. We get so caught up in language, time, ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/OXBwUrgE-kI/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/OXBwUrgE-kI/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/OXBwUrgE-kI/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2025-01-07T17:00:38Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "09w_sBtWwcDVTyOqFpahhtJYFuw",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "s6RZdU81Zj4"
+      },
+      "snippet": {
+        "publishedAt": "2024-12-27T17:04:07Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "The Teen Steroid Epidemic Explained - Dr. Chris Raynor",
+        "description": "Dr. Chris Raynor is an orthopedic surgeon, sports medicine specialist, and owner of an intergrated healthcare facility and ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/s6RZdU81Zj4/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/s6RZdU81Zj4/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/s6RZdU81Zj4/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-12-27T17:04:07Z"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "yJWDGYmFMRQ7XpwydEecVMf1_D0",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "wvRjC5ZgZgo"
+      },
+      "snippet": {
+        "publishedAt": "2024-12-10T17:01:03Z",
+        "channelId": "UC1KmNKYC1l0stjctkGswl6g",
+        "title": "Marcus Aurelius - The Power of INDIFFERENCE",
+        "description": "Empower your critical thinking and get the full picture on every story. Subscribe through my link https://ground.news/afterskool to ...",
+        "thumbnails": {
+          "default": {
+            "url": "https://i.ytimg.com/vi/wvRjC5ZgZgo/default.jpg",
+            "width": 120,
+            "height": 90
+          },
+          "medium": {
+            "url": "https://i.ytimg.com/vi/wvRjC5ZgZgo/mqdefault.jpg",
+            "width": 320,
+            "height": 180
+          },
+          "high": {
+            "url": "https://i.ytimg.com/vi/wvRjC5ZgZgo/hqdefault.jpg",
+            "width": 480,
+            "height": 360
+          }
+        },
+        "channelTitle": "After Skool",
+        "liveBroadcastContent": "none",
+        "publishTime": "2024-12-10T17:01:03Z"
+      }
+    }
+  ]
+}

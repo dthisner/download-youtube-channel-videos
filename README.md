@@ -33,6 +33,6 @@ If you run with **go run main.go**, it will not recognize the other files and yo
 - [x] Right now, when re-running the script, it overwrites the previous downloaded data, we need to check and see if the video has already been added or not
 - [x] Re-Download all data from youtube to get the biggest thumbnail possible
 - [x] Make Season with Year dynamic, check for the oldest year and put that as seasson 1
-- [ ] Delete Audio and Video files after
+- [x] Delete Audio and Video files after
 - [x] Able to specify the Shows Name
 - [ ] Check to see what is the latest episode from that season to not overwrite

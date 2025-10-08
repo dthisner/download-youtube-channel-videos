@@ -1,5 +1,5 @@
 .env
 After Skool
 *.json
-
+!TestData/*.json
 .DS_Store
