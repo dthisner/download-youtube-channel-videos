@@ -21,7 +21,14 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	apiKey := os.Getenv("YT_API_KEY")
+	channelID := os.Getenv("YT_CHANNEL_ID")
 	channelName := os.Getenv("YT_SHOW_NAME")
+	seasonStartYear := os.Getenv("SEASON_START_YEAR")
+	if apiKey == "" || channelID == "" || channelName == "" || seasonStartYear == "" {
+		log.Fatal("missing YT_API_KEY or YT_CHANNEL_ID environment variables")
+	}
+
 	JSON_FILE_NAME = fmt.Sprintf("%s-channel-data.json", channelName)
 
 	updateYTChannelData()
@@ -112,10 +119,12 @@ func updateYTChannelData() {
 	}
 	defer jsonFile.Close()
 
-	// newVideoData := getYTChannelVideos()
-	newVideoData := getYTChannelVideosDEBUG()
+	newVideoData := getYTChannelVideos()
+	// newVideoData := getYTChannelVideosDEBUG()
 
-	videosToAdd := FindNewVideos(existingVideos, newVideoData)
+	extractedInfo := extractInformation(newVideoData)
+
+	videosToAdd := FindNewVideos(existingVideos, extractedInfo)
 	existingVideos = append(existingVideos, videosToAdd...)
 
 	marshalled, _ := json.Marshal(existingVideos)
@@ -126,36 +135,33 @@ func updateYTChannelData() {
 	log.Printf("Successfully saved the JSON file to: %s", JSON_FILE_NAME)
 }
 
-func getYTChannelVideosDEBUG() []Video {
+func getYTChannelVideosDEBUG() []SearchResult {
 	jsonFile, err := os.Open("TestData/YouTube-Data-Response.json")
 	if err != nil {
 		log.Print("Problem reading the debugFile", err)
 
 	}
-	var videos []Video
 
 	var res APIResponse
 	if err := json.NewDecoder(jsonFile).Decode(&res); err != nil {
 		log.Print("Error decoding response:", err)
-		return videos
+		return res.Items
 	}
 
-	extractInformation(res.Items, &videos)
-
-	fmt.Printf("Total videos fetched: %d\n", len(videos))
-	return videos
+	fmt.Printf("Total videos fetched: %d\n", len(res.Items))
+	return res.Items
 }
 
-func getYTChannelVideos() []Video {
+func getYTChannelVideos() []SearchResult {
 	apiKey := os.Getenv("YT_API_KEY")
 	channelID := os.Getenv("YT_CHANNEL_ID")
 	baseURL := "https://www.googleapis.com/youtube/v3/search"
 
 	nextPageToken := ""
-	maxResults := 500 // Set your limit (max = 500)
+	maxResults := 50 // Set your limit (max = 50)
 	totalFetched := 0
 
-	var videos []Video
+	var videoData []SearchResult
 
 	for {
 		url := fmt.Sprintf("%s?key=%s&channelId=%s&part=snippet,id&order=date&maxResults=20&pageToken=%s", baseURL, apiKey, channelID, nextPageToken)
@@ -163,7 +169,7 @@ func getYTChannelVideos() []Video {
 		resp, err := http.Get(url)
 		if err != nil {
 			log.Print("Error:", err)
-			return videos
+			return videoData
 		}
 		defer resp.Body.Close()
 
@@ -171,16 +177,16 @@ func getYTChannelVideos() []Video {
 			log.Printf("Error: received status code %d\n", resp.StatusCode)
 			body, _ := io.ReadAll(resp.Body)
 			log.Printf("Response body: %s\n", body)
-			return videos
+			return videoData
 		}
 
 		var res APIResponse
 		if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
 			log.Print("Error decoding response:", err)
-			return videos
+			return videoData
 		}
 
-		extractInformation(res.Items, &videos)
+		videoData = append(videoData, res.Items...)
 		totalFetched++
 
 		if res.NextPageToken == "" || totalFetched >= maxResults {
@@ -192,8 +198,8 @@ func getYTChannelVideos() []Video {
 		time.Sleep(5 * time.Second)
 	}
 
-	fmt.Printf("Total videos fetched: %d\n", len(videos))
-	return videos
+	log.Printf("Total videos fetched: %d\n", len(videoData))
+	return videoData
 }
 
 // normalizeTitle standardizes titles for consistent comparison
@@ -222,19 +228,20 @@ func FindNewVideos(existing, newVideos []Video) []Video {
 }
 
 // extractInformation takes the response JSON and saves it to our Video Struct
-func extractInformation(res []SearchResult, videos *[]Video) {
+func extractInformation(videoData []SearchResult) []Video {
 	var currentEpisode = 1
 	var currentSeason = 1
 	var tvShowName = os.Getenv("YT_SHOW_NAME")
 
-	seasonStartYear := os.Getenv("SEASON_START_YEAR")
-	startYear, err := strconv.Atoi(seasonStartYear)
+	startYear, err := strconv.Atoi(os.Getenv("SEASON_START_YEAR"))
 	if err != nil {
-		log.Printf("invalid SEASON_START_YEAR %q: %v", seasonStartYear, err)
-		return
+		log.Printf("invalid SEASON_START_YEAR %q: %v", os.Getenv("SEASON_START_YEAR"), err)
+		return nil
 	}
 
-	for _, item := range res {
+	var videosData []Video
+
+	for _, item := range videoData {
 		var video Video
 
 		if item.ID.VideoID == "" {
@@ -272,9 +279,11 @@ func extractInformation(res []SearchResult, videos *[]Video) {
 		video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s", tvShowName, video.Season, video.Season, video.Episode, video.Title)
 		video.Filename = fmt.Sprintf("S%sE%s - %s", video.Season, video.Episode, video.Title)
 
-		*videos = append(*videos, video)
+		videosData = append(videosData, video)
 		printData(video)
 	}
+
+	return videosData
 }
 
 // getThumbUrl looks for the biggest thumbnail and saves that as the best option for Thumbnail URL
