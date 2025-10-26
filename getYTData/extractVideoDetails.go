@@ -122,14 +122,27 @@ func FindNewVideos(existing, newVideos []models.Video) []models.Video {
 	return videosToAdd
 }
 
+// normalizeTitle normalizes special characters in the title
+func normalizeYouTubeTitle(input string) string {
+	// Replace & with "and"
+	input = strings.ReplaceAll(input, "&", "and")
+	input = strings.ReplaceAll(input, " l ", "|")
+
+	return input
+}
+
 func extractEpisodeInfo(input string) (string, string, string, error) {
+	log.Print("Input: ", input)
+	normalizedInput := normalizeYouTubeTitle(input)
+
+	log.Print("normalizedInput: ", normalizedInput)
 	// Define the regex pattern to match the title, episode, and season (case-insensitive for EPISODE and Season)
 	// Assumes format: "Title | ... EPISODE <number> | Season <number>"
 	pattern := `^(.*?)\s*\|\s*.*[Ee][Pp][Ii][Ss][Oo][Dd][Ee]\s+(\d+)\s*\|\s*[Ss][Ee][Aa][Ss][Oo][Nn]\s+(\d+)`
 	re := regexp.MustCompile(pattern)
 
 	// Find matches
-	matches := re.FindStringSubmatch(input)
+	matches := re.FindStringSubmatch(normalizedInput)
 	if len(matches) != 4 {
 		return "", "", "", fmt.Errorf("invalid format: %s", input)
 	}
@@ -139,7 +152,7 @@ func extractEpisodeInfo(input string) (string, string, string, error) {
 	seasonStr := matches[3]
 
 	// Add leading zero to season and episode if needed
-	season := episodeStr
+	season := seasonStr
 	if len(seasonStr) == 1 {
 		season = "0" + seasonStr
 	}
