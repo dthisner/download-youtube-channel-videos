@@ -72,6 +72,8 @@ func (d Download) Videos() {
 				log.Print(err)
 				videos[i].Error = err.Error()
 				removeMediaFiles(video)
+				log.Print("Wainting 10s")
+				time.Sleep(10 * time.Second)
 			} else {
 				videos[i].Downloaded = true
 				videos[i].Error = ""
