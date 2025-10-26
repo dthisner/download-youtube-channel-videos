@@ -18,6 +18,7 @@ import (
 
 type Download struct {
 	JsonFilePath string
+	SaveLoc      string
 	ShowName     string
 }
 
@@ -72,7 +73,7 @@ func (d Download) Videos() {
 				log.Print(err)
 				videos[i].Error = err.Error()
 				removeMediaFiles(video)
-				log.Print("Wainting 10s")
+				log.Print("Waiting 10s")
 				time.Sleep(10 * time.Second)
 			} else {
 				videos[i].Downloaded = true
@@ -95,7 +96,7 @@ func (d Download) Videos() {
 // checkSeasonFolderExist creates the season folder if it's missing
 func (d Download) checkSeasonFolderExist(season string) error {
 	var tvShowName = d.ShowName
-	folderPath := fmt.Sprintf("%s/Season %s", tvShowName, season)
+	folderPath := fmt.Sprintf("%s%s/Season %s", d.SaveLoc, tvShowName, season)
 
 	_, err := os.Stat(folderPath)
 

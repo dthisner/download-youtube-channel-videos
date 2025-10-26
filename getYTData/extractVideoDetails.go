@@ -189,8 +189,8 @@ func printData(video models.Video) {
 }
 
 func (YT YouTubeChannel) FilePathAndName(video models.Video) models.Video {
-	video.Filepath = fmt.Sprintf("%s/Season %s/S%sE%s - %s",
-		YT.EnvVar.ChannelName, video.Season, video.Season, video.Episode, video.Title)
+	video.Filepath = fmt.Sprintf("%s%s/Season %s/S%sE%s - %s",
+		YT.EnvVar.SaveLoc, YT.EnvVar.ChannelName, video.Season, video.Season, video.Episode, video.Title)
 
 	video.Filename = fmt.Sprintf("S%sE%s - %s",
 		video.Season, video.Episode, video.Title)

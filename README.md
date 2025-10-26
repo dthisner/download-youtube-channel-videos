@@ -41,4 +41,5 @@ If you run with **go run main.go**, it will not recognize the other files and yo
 - [ ] Check to see what is the latest episode from that season to not overwrite
 - [x] Convert to using Structs to make it easier checking existing and fresh data to see what is the last episode when something gone wrong
 - [x] Delete video and audio files upon issues downloading
-- [ ] Download YouTube videos from a playlist
+- [x] Download YouTube videos from a playlist
+- [x] env var for where the save location should be

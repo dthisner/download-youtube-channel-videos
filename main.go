@@ -27,13 +27,14 @@ func main() {
 		PlaylistID:      os.Getenv("YT_PLAYLIST_ID"),
 		ChannelName:     os.Getenv("YT_CHANNEL_NAME"),
 		SeasonStartYear: os.Getenv("SEASON_START_YEAR"),
+		SaveLoc:         os.Getenv("SAVE_LOCATION"),
 	}
 
 	if err := envVar.Validate(); err != nil {
 		log.Fatal(err)
 	}
 
-	jsonFilePath := fmt.Sprintf("YouTube-Data/%s-channel-data.json", envVar.ChannelName)
+	jsonFilePath := fmt.Sprintf("%s%s-channel-data.json", envVar.SaveLoc, envVar.ChannelName)
 
 	var video []models.Video
 
@@ -41,6 +42,7 @@ func main() {
 		Download: Download{
 			JsonFilePath: jsonFilePath,
 			ShowName:     envVar.ChannelName,
+			SaveLoc:      envVar.SaveLoc,
 		},
 		YT: getYTData.YouTubeChannel{
 			EnvVar:              envVar,

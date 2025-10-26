@@ -11,6 +11,7 @@ type EnvVar struct {
 	PlaylistID      string
 	ChannelName     string
 	SeasonStartYear string
+	SaveLoc         string
 }
 
 func (e EnvVar) Validate() error {
