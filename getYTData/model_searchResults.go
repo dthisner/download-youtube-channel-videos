@@ -1,4 +1,4 @@
-package models
+package getYTData
 
 type SearchResult struct {
 	Kind string `json:"kind"`
@@ -9,15 +9,17 @@ type SearchResult struct {
 		ChannelID  string `json:"channelId,omitempty"`
 		PlaylistID string `json:"playlistId,omitempty"`
 	} `json:"id"`
-	Snippet struct {
-		PublishedAt          string               `json:"publishedAt"`
-		ChannelID            string               `json:"channelId"`
-		Title                string               `json:"title"`
-		Description          string               `json:"description"`
-		Thumbnails           map[string]Thumbnail `json:"thumbnails"`
-		ChannelTitle         string               `json:"channelTitle"`
-		LiveBroadcastContent string               `json:"liveBroadcastContent"`
-	} `json:"snippet"`
+	Snippet SearchSnippet `json:"snippet"`
+}
+
+type SearchSnippet struct {
+	PublishedAt          string               `json:"publishedAt"`
+	ChannelID            string               `json:"channelId"`
+	Title                string               `json:"title"`
+	Description          string               `json:"description"`
+	Thumbnails           map[string]Thumbnail `json:"thumbnails"`
+	ChannelTitle         string               `json:"channelTitle"`
+	LiveBroadcastContent string               `json:"liveBroadcastContent"`
 }
 
 type Thumbnail struct {

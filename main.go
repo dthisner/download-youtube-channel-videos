@@ -5,14 +5,15 @@ import (
 	"log"
 	"os"
 
+	"download-youtube/getYTData"
 	"download-youtube/models"
 
 	"github.com/joho/godotenv"
 )
 
 type App struct {
-	download Download
-	YT       YouTubeChannel
+	Download Download
+	YT       getYTData.YouTubeChannel
 }
 
 func main() {
@@ -37,18 +38,18 @@ func main() {
 	var video []models.Video
 
 	app := &App{
-		download: Download{
-			jsonFilePath: jsonFilePath,
-			showName:     envVar.ChannelName,
+		Download: Download{
+			JsonFilePath: jsonFilePath,
+			ShowName:     envVar.ChannelName,
 		},
-		YT: YouTubeChannel{
-			evnVar:              envVar,
-			jsonFilePath:        jsonFilePath,
-			currentVideoData:    video,
-			downloadedVideoData: video,
+		YT: getYTData.YouTubeChannel{
+			EnvVar:              envVar,
+			JsonFilePath:        jsonFilePath,
+			CurrentVideoData:    video,
+			DownloadedVideoData: video,
 		},
 	}
 
-	app.YT.getData()
-	app.download.Videos()
+	app.YT.GetData()
+	app.Download.Videos()
 }

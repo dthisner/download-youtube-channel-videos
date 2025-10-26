@@ -15,12 +15,12 @@ import (
 )
 
 type Download struct {
-	jsonFilePath string
-	showName     string
+	JsonFilePath string
+	ShowName     string
 }
 
-func (download Download) Videos() {
-	jsonFile, err := os.Open(download.jsonFilePath)
+func (d Download) Videos() {
+	jsonFile, err := os.Open(d.JsonFilePath)
 	if err != nil {
 		panic(err)
 	}
@@ -34,11 +34,11 @@ func (download Download) Videos() {
 	for i, video := range videos {
 		printVideoTitle(video.Title)
 
-		download.checkSeasonFolderExist(video.Season)
+		d.checkSeasonFolderExist(video.Season)
 		generateEpisodeNfo(video)
 
 		if !video.ImageSaved {
-			err = download.image(video)
+			err = d.image(video)
 			if err != nil {
 				log.Print(err)
 			} else {
@@ -50,7 +50,7 @@ func (download Download) Videos() {
 		}
 
 		if !video.Downloaded {
-			err = download.video(video)
+			err = d.video(video)
 			if err != nil {
 				log.Print(err)
 				videos[i].Error = err.Error()
@@ -64,7 +64,7 @@ func (download Download) Videos() {
 		}
 
 		videosJSON, _ := json.Marshal(videos)
-		err = os.WriteFile(download.jsonFilePath, videosJSON, 0644)
+		err = os.WriteFile(d.JsonFilePath, videosJSON, 0644)
 		if err != nil {
 			log.Print("Problem with writting JSON", err)
 		}
@@ -75,7 +75,7 @@ func (download Download) Videos() {
 
 // checkSeasonFolderExist creates the season folder if it's missing
 func (d Download) checkSeasonFolderExist(season string) error {
-	var tvShowName = d.showName
+	var tvShowName = d.ShowName
 	folderPath := fmt.Sprintf("%s/Season %s", tvShowName, season)
 
 	_, err := os.Stat(folderPath)

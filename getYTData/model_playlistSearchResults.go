@@ -1,4 +1,4 @@
-package models
+package getYTData
 
 // PlaylistItemListResponse represents the top-level response from the playlistItems endpoint.
 type PlaylistItemListResponse struct {
@@ -17,10 +17,10 @@ type PageInfo struct {
 
 // PlaylistItem represents a single item in the playlist.
 type PlaylistItem struct {
-	Kind    string  `json:"kind"`
-	Etag    string  `json:"etag"`
-	ID      string  `json:"id"` // Playlist item ID (string)
-	Snippet Snippet `json:"snippet"`
+	Kind       string  `json:"kind"`
+	Etag       string  `json:"etag"`
+	PlaylistID string  `json:"id"` // Playlist item ID (string)
+	Snippet    Snippet `json:"snippet"`
 }
 
 // Snippet contains details about the playlist item.
