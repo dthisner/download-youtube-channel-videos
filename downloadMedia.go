@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
+	"time"
 
 	"download-youtube/models"
 
@@ -31,6 +33,21 @@ func (d Download) Videos() {
 	jsonByte, _ := io.ReadAll(jsonFile)
 	json.Unmarshal(jsonByte, &videos)
 
+	client := youtube.Client{
+		HTTPClient: &http.Client{
+			CheckRedirect: func(req *http.Request, via []*http.Request) error {
+				if len(via) >= 10 {
+					return fmt.Errorf("stopped after 10 redirects")
+				}
+				if strings.Contains(req.URL.String(), "google.com/sorry") {
+					return fmt.Errorf("hit Google Sorry page, possible rate limit or CAPTCHA")
+				}
+				return nil
+			},
+			Timeout: 10 * time.Second,
+		},
+	}
+
 	for i, video := range videos {
 		printVideoTitle(video.Title)
 
@@ -50,7 +67,7 @@ func (d Download) Videos() {
 		}
 
 		if !video.Downloaded {
-			err = d.video(video)
+			err = d.video(video, client)
 			if err != nil {
 				log.Print(err)
 				videos[i].Error = err.Error()
@@ -97,9 +114,7 @@ func (d Download) checkSeasonFolderExist(season string) error {
 
 // DownloadVideo gets the YouTube video, looking for 720p format.
 // Have to get both audio and video stream to then merge them into one file
-func (d Download) video(v models.Video) error {
-	client := youtube.Client{}
-
+func (d Download) video(v models.Video, client youtube.Client) error {
 	log.Print("Downloading video from: ", v.URL)
 	video, err := client.GetVideo(v.URL)
 	if err != nil {

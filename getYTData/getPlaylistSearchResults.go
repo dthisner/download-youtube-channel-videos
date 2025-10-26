@@ -96,7 +96,7 @@ func (YT YouTubeChannel) ExtractPlaylistSearchResultInfo(videoData []PlaylistIte
 
 		// Splitting between getting ALL videos from a channel VS getting something that have seasons and episodes in the name
 		if strings.Contains(normalizeTitle(video.Title), "episode") && strings.Contains(normalizeTitle(video.Title), "season") {
-			video.Title, video.Episode, video.Season, err = extractEpisodeInfo(video.Title)
+			video.Title, video.Season, video.Episode, err = extractEpisodeInfo(video.Title)
 			if err != nil {
 				log.Print("Problem with extracting episode info", err)
 			}

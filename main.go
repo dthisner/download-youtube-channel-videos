@@ -33,7 +33,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	jsonFilePath := fmt.Sprintf("%s-channel-data.json", envVar.ChannelName)
+	jsonFilePath := fmt.Sprintf("YouTube-Data/%s-channel-data.json", envVar.ChannelName)
 
 	var video []models.Video
 
