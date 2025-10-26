@@ -1,4 +1,4 @@
-module donwload-youtube
+module download-youtube
 
 go 1.23
 

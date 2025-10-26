@@ -11,18 +11,20 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"download-youtube/models"
 )
 
 type YouTubeChannel struct {
 	jsonFilePath        string
-	evnVar              EnvVar
-	currentVideoData    []Video
-	downloadedVideoData []Video
+	evnVar              models.EnvVar
+	currentVideoData    []models.Video
+	downloadedVideoData []models.Video
 }
 
 // get gets all video data based on the channel ID. Will loop until it has recieved all of them or reached the maxResult
 func (YT YouTubeChannel) getData() {
-	var existingVideos []Video
+	var existingVideos []models.Video
 
 	jsonFile, err := os.Open(YT.jsonFilePath)
 	if err != nil {
@@ -58,13 +60,13 @@ func (YT YouTubeChannel) getData() {
 	log.Printf("Successfully saved the JSON file to: %s", YT.jsonFilePath)
 }
 
-func (YT YouTubeChannel) getVideosDEBUG() []SearchResult {
+func (YT YouTubeChannel) getVideosDEBUG() []models.SearchResult {
 	jsonFile, err := os.Open("TestData/YouTube-Data-Response.json")
 	if err != nil {
 		log.Print("Problem reading the debugFile", err)
 	}
 
-	var res APIResponse
+	var res models.APIResponse
 	if err := json.NewDecoder(jsonFile).Decode(&res); err != nil {
 		log.Print("Error decoding response:", err)
 		return res.Items
@@ -82,12 +84,12 @@ const (
 	defaultMaxResults = 50
 )
 
-func (YT YouTubeChannel) getVideos() ([]SearchResult, error) {
+func (YT YouTubeChannel) getVideos() ([]models.SearchResult, error) {
 	nextPageToken := ""
 	totalFetched := 0
 
 	client := &http.Client{}
-	var videoData []SearchResult
+	var videoData []models.SearchResult
 
 	for {
 		url, err := YT.buildURL(nextPageToken)
@@ -110,7 +112,7 @@ func (YT YouTubeChannel) getVideos() ([]SearchResult, error) {
 			return videoData, err
 		}
 
-		var res APIResponse
+		var res models.APIResponse
 		if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
 			log.Printf("Error decoding response from %s: %v", url, err)
 			return videoData, err
@@ -155,7 +157,7 @@ func normalizeTitle(title string) string {
 }
 
 // FindNewVideos compares new videos against existing ones and returns new ones
-func FindNewVideos(existing, newVideos []Video) []Video {
+func FindNewVideos(existing, newVideos []models.Video) []models.Video {
 	// Build a map of existing titles for O(1) lookups
 	titleMap := make(map[string]struct{})
 	for _, video := range existing {
@@ -163,7 +165,7 @@ func FindNewVideos(existing, newVideos []Video) []Video {
 	}
 
 	// Collect new videos that don't exist in the map
-	var videosToAdd []Video
+	var videosToAdd []models.Video
 	for _, video := range newVideos {
 		log.Printf("Does %s exist already?", video.Title)
 		if _, exists := titleMap[normalizeTitle(video.Title)]; !exists {
@@ -175,7 +177,7 @@ func FindNewVideos(existing, newVideos []Video) []Video {
 }
 
 // extractInformation takes the response JSON and saves it to our Video Struct
-func (YT YouTubeChannel) extractInformation(videoData []SearchResult) []Video {
+func (YT YouTubeChannel) extractInformation(videoData []models.SearchResult) []models.Video {
 	var currentEpisode = 1
 	var currentSeason = 1
 	var tvShowName = YT.evnVar.ChannelName
@@ -186,10 +188,10 @@ func (YT YouTubeChannel) extractInformation(videoData []SearchResult) []Video {
 		return nil
 	}
 
-	var videosData []Video
+	var videosData []models.Video
 
 	for _, item := range videoData {
-		var video Video
+		var video models.Video
 
 		if item.ID.VideoID == "" {
 			log.Print("Item does not have an Video ID")
@@ -274,7 +276,7 @@ func extractEpisodeInfo(input string) (string, string, string, error) {
 }
 
 // getThumbUrl looks for the biggest thumbnail and saves that as the best option for Thumbnail URL
-func getThumbUrl(thumbnails map[string]Thumbnail) string {
+func getThumbUrl(thumbnails map[string]models.Thumbnail) string {
 	var biggestSize = 0
 	var thumbnailURL string
 	for _, thumb := range thumbnails {
@@ -288,7 +290,7 @@ func getThumbUrl(thumbnails map[string]Thumbnail) string {
 }
 
 // printData Just prints some of the selected values
-func printData(video Video) {
+func printData(video models.Video) {
 	log.Print("Title ", video.Title)
 	log.Print("URL: ", video.URL)
 	log.Print("Published At: ", video.PublishedAt)

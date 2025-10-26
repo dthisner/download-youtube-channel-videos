@@ -5,49 +5,12 @@ import (
 	"log"
 	"os"
 	"text/template"
+
+	"download-youtube/models"
 )
 
-type EpisodeDetails struct {
-	CreationDate     string
-	Version          string
-	Title            string
-	OriginalTitle    string
-	ShowTitle        string
-	Season           string
-	Episode          string
-	DisplaySeason    string
-	DisplayEpisode   string
-	ID               string
-	Ratings          string
-	UserRating       string
-	Plot             string
-	Runtime          string
-	MPAA             string
-	Premiered        string
-	Aired            string
-	Watched          string
-	PlayCount        string
-	Trailer          string
-	DateAdded        string
-	EpBookmark       string
-	Code             string
-	VideoCodec       string
-	VideoAspect      string
-	VideoWidth       string
-	VideoHeight      string
-	VideoDuration    string
-	StereoMode       string
-	Source           string
-	OriginalFilename string
-	UserNote         string
-	GroupEpisode     string
-	GroupID          string
-	GroupName        string
-	GroupSeason      string
-}
-
 // generateEpisodeNfo created an .nfo file with all data based on the extracted data from youtube
-func generateEpisodeNfo(video Video) {
+func generateEpisodeNfo(video models.Video) {
 	// Template string
 	xmlTemplate := `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--created on {{.CreationDate}} - tinyMediaManager {{.Version}}-->
@@ -95,7 +58,7 @@ func generateEpisodeNfo(video Video) {
 </episodedetails>`
 
 	// Define the episode details
-	episode := EpisodeDetails{
+	episode := models.NFOEpisodeDetails{
 		CreationDate:     "2024-07-25 15:06:07",
 		Title:            video.Title,
 		OriginalTitle:    video.Title,

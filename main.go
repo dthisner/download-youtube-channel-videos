@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 
+	"download-youtube/models"
+
 	"github.com/joho/godotenv"
 )
 
@@ -18,7 +20,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	envVar := EnvVar{
+	envVar := models.EnvVar{
 		ApiKey:          os.Getenv("YT_API_KEY"),
 		ChannelID:       os.Getenv("YT_CHANNEL_ID"),
 		PlaylistID:      os.Getenv("YT_PLAYLIST_ID"),
@@ -32,7 +34,7 @@ func main() {
 
 	jsonFilePath := fmt.Sprintf("%s-channel-data.json", envVar.ChannelName)
 
-	var video []Video
+	var video []models.Video
 
 	app := &App{
 		download: Download{

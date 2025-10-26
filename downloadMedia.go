@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/exec"
 
+	"download-youtube/models"
+
 	"github.com/kkdai/youtube/v2"
 )
 
@@ -24,7 +26,7 @@ func (download Download) Videos() {
 	}
 	defer jsonFile.Close()
 
-	var videos []Video
+	var videos []models.Video
 
 	jsonByte, _ := io.ReadAll(jsonFile)
 	json.Unmarshal(jsonByte, &videos)
@@ -95,7 +97,7 @@ func (d Download) checkSeasonFolderExist(season string) error {
 
 // DownloadVideo gets the YouTube video, looking for 720p format.
 // Have to get both audio and video stream to then merge them into one file
-func (d Download) video(v Video) error {
+func (d Download) video(v models.Video) error {
 	client := youtube.Client{}
 
 	log.Print("Downloading video from: ", v.URL)
@@ -143,7 +145,7 @@ func (d Download) video(v Video) error {
 	return nil
 }
 
-func removeMediaFiles(v Video) {
+func removeMediaFiles(v models.Video) {
 	audioFileName := v.Filepath + "_audio.mp4"
 	videoFileName := v.Filepath + "_video.mp4"
 
@@ -196,7 +198,7 @@ func (d Download) stream(client youtube.Client, video *youtube.Video, format *yo
 }
 
 // DownloadImage Downloads an image from the given URL and saves it to the specified file
-func (d Download) image(video Video) error {
+func (d Download) image(video models.Video) error {
 	log.Printf("Downloading Thumbnail to: %s", video.Title)
 
 	response, err := http.Get(video.ThumbnailURL)
